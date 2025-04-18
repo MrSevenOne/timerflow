@@ -1,8 +1,8 @@
 
   import 'package:flutter/material.dart';
   
-  class HomeViewModel extends ChangeNotifier {
-	  HomeViewModel();
+  class TableAddViewModel extends ChangeNotifier {
+	  TableAddViewModel();
 	
 	  // Add your ViewModel code here
   }
