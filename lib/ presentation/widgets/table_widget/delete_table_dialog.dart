@@ -16,9 +16,8 @@ class DeleteTableDialog extends StatelessWidget {
       {required BuildContext context, required TableModel tableModel}) async {
     await showDialog(
       context: context,
-      builder: (_) => Dialog(
-        child: DeleteTableDialog(tableModel: tableModel),
-      ),
+      builder: (_) => 
+         DeleteTableDialog(tableModel: tableModel),
     );
   }
 
