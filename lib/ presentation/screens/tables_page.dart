@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/tables_viewmodel.dart';
 import 'package:timerflow/%20presentation/widgets/table_widget/add_table_dialog.dart';
 import 'package:timerflow/%20presentation/widgets/table_widget/items.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:timerflow/%20presentation/widgets/table_widget/start_session_dialog.dart';
+import 'package:timerflow/domain/models/session_model.dart';
+import 'package:timerflow/routers/app_routers.dart';
 
 class TablePage extends StatefulWidget {
   const TablePage({super.key});
@@ -47,7 +49,31 @@ class _TablePageState extends State<TablePage> {
                         itemCount: viewModel.tables.length,
                         itemBuilder: (context, index) {
                           final table = viewModel.tables[index];
-                          return TableItem(table: table, onTap: () {});
+                          return TableItem(
+                            table: table,
+                            onTap: () {
+                              final sessionModel = SessionModel(
+                                table_id: table.id!,
+                                start_time: DateTime.now(),
+                                tableModel:
+                                    table, // <<== mana bu qator qo‘shiladi
+                              );
+
+                              if (table.status == 'empty') {
+                                StartSessionDialog.show(
+                                    context: context,
+                                    sessionModel: sessionModel);
+                              } else if (table.status == 'busy') {
+                                Navigator.pushNamed(
+                                  context,
+                                  AppRoutes.session,
+                                  arguments: sessionModel,
+                                );
+                              } else {
+                                debugPrint("bu Table Service holatda");
+                              }
+                            },
+                          );
                         },
                       ),
           );
