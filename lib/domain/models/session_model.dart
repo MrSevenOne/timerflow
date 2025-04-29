@@ -12,9 +12,9 @@ class SessionModel {
   SessionModel({
     this.id,
     required this.table_id,
-     this.order_id,
+    this.order_id,
     required this.start_time,
-     this.end_time,
+    this.end_time,
     this.tableModel,
   });
 
@@ -24,7 +24,7 @@ class SessionModel {
       table_id: json['table_id'],
       order_id: json['order_id'],
       start_time: DateTime.parse(json['start_time']),
-      end_time: DateTime.parse(json['end_time']),
+      end_time: json['end_time'] != null ? DateTime.parse(json['end_time']) : null,
       tableModel: json['tables'] != null
           ? TableModel.fromJson(json['tables'])
           : null,
@@ -39,5 +39,4 @@ class SessionModel {
       'end_time': end_time?.toIso8601String(),
     };
   }
-
 }
