@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timerflow/data/services/supabase/database/tables_service.dart';
 import 'package:timerflow/domain/models/session_model.dart';
@@ -9,49 +10,103 @@ class SessionService {
 
   // Barcha sessionlarni bog'langan jadval bilan birga olish
   Future<List<SessionModel>> getSessionsWithDetails() async {
-    final response = await supabase
-        .from(tableName)
-        .select('*, tables(*)'); // Agar foreign key bilan ulangan bo'lsa
-    return response.map((e) => SessionModel.fromJson(e)).toList();
+    try {
+      final response =
+          await supabase.from(tableName).select('*, tables(*)');
+
+      debugPrint('Sessions fetched: $response');
+      return (response as List<dynamic>)
+          .map((e) => SessionModel.fromJson(e))
+          .toList();
+    } catch (e) {
+      debugPrint('Error fetching sessions: $e');
+      rethrow;
+    }
   }
 
   // ID bo'yicha bitta sessionni olish
   Future<Map<String, dynamic>?> getSessionById(int id) async {
-    final response = await supabase
-        .from(tableName)
-        .select('*, tables(*)')
-        .eq('id', id)
-        .single(); // faqat bitta row kutiladi
+    try {
+      final response = await supabase
+          .from(tableName)
+          .select('*, tables(*)')
+          .eq('id', id)
+          .single();
 
-    return Map<String, dynamic>.from(response);
-  }
-
-  // Qo'shish
-  Future<void> addSession(
-      {required SessionModel sessionModel,
-      required int tableId,
-      required String status}) async {
-    await supabase.from(tableName).insert(sessionModel.toJson());
-    await tableService.updateStatus(tableId: tableId, status: status);
-  }
-
-  // Tahrirlash
-  Future<void> updateSession(
-      {required int id, required SessionModel sessionModel}) async {
-    final response = await supabase
-        .from(tableName)
-        .update(sessionModel.toJson())
-        .eq('id', id);
-    if (response.error != null) {
-      throw Exception('Failed to update session: ${response.error!.message}');
+      debugPrint('Session fetched by id: $response');
+      return Map<String, dynamic>.from(response);
+    } catch (e) {
+      debugPrint('Error fetching session by id: $e');
+      return null;
     }
   }
 
-  // O'chirish
+  // tableId bo'yicha session olish (SENING YANGI FUNKSIYANG)
+  Future<Map<String, dynamic>?> getSessionByTableId(int tableId) async {
+    try {
+      final response = await supabase
+          .from(tableName)
+          .select('*, tables(*)')
+          .eq('table_id', tableId)
+          .maybeSingle();
+
+      debugPrint('Session fetched by tableId: $response');
+      if (response == null) return null;
+      return Map<String, dynamic>.from(response);
+    } catch (e) {
+      debugPrint('Error fetching session by tableId: $e');
+      return null;
+    }
+  }
+
+  // Session qo'shish
+  Future<void> addSession({
+    required SessionModel sessionModel,
+    required int tableId,
+    required String status,
+  }) async {
+    try {
+      await supabase
+          .from(tableName)
+          .insert(sessionModel.toJson())
+          ;
+
+      await tableService.updateStatus(tableId: tableId, status: status);
+      debugPrint('Session added successfully for tableId: $tableId');
+    } catch (e) {
+      debugPrint('Error adding session: $e');
+      rethrow;
+    }
+  }
+
+  // Sessionni yangilash
+  Future<void> updateSession({
+    required int id,
+    required SessionModel sessionModel,
+  }) async {
+    try {
+      await supabase
+          .from(tableName)
+          .update(sessionModel.toJson())
+          .eq('id', id)
+          ;
+
+      debugPrint('Session updated successfully: $id');
+    } catch (e) {
+      debugPrint('Error updating session: $e');
+      rethrow;
+    }
+  }
+
+  // Sessionni o'chirish
   Future<void> deleteSession(int id) async {
-    final response = await supabase.from(tableName).delete().eq('id', id);
-    if (response.error != null) {
-      throw Exception('Failed to delete session: ${response.error!.message}');
+    try {
+      await supabase.from(tableName).delete().eq('id', id);
+
+      debugPrint('Session deleted successfully: $id');
+    } catch (e) {
+      debugPrint('Error deleting session: $e');
+      rethrow;
     }
   }
 }
