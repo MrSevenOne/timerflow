@@ -15,4 +15,11 @@ class SessionRepository {
           sessionModel: sessionModel, tableId: tableId, status: status);
   //deleteSession
   Future deleteSession({required int id}) => service.deleteSession(id);
+  //get session by tableId
+Future<SessionModel?> getSessionbyTableId({required int tableId}) async {
+  final data = await service.getSessionByTableId(tableId);
+  if (data == null) return null;
+  return SessionModel.fromJson(data);
+}
+
 }

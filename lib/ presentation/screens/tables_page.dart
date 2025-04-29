@@ -67,7 +67,7 @@ class _TablePageState extends State<TablePage> {
                                 Navigator.pushNamed(
                                   context,
                                   AppRoutes.session,
-                                  arguments: sessionModel,
+                                  arguments: table.id,
                                 );
                               } else {
                                 debugPrint("bu Table Service holatda");
