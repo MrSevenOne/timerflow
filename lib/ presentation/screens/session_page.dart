@@ -30,10 +30,9 @@ void initState() {
     await sessionViewModel.fetchSessionByTableId(tableId: widget.tableId);
 
     final sessionId = sessionViewModel.session?.id;
-    if (sessionId != null) {
-      await orderViewModel.fetchDrinkOrdersBySessionId(sessionId);
+      await orderViewModel.fetchDrinkOrdersBySessionId(sessionId!);
       await orderViewModel.fetchFoodOrdersBySessionId(sessionId);
-    }
+    
   });
 }
 
@@ -79,38 +78,41 @@ void initState() {
         final totalPrice = NumberFormatter.price(total);
         final table = viewModel.session?.tableModel;
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('${table?.name} ${table?.number}'),
-          ),
-          body: Padding(
-            padding: EdgeInsets.all(AppConstant.padding),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SessionInfoRow(title: 'Boshlangan vaqt:', value: startTime),
-                SessionInfoRow(title: 'O\'tgan vaqt:', value: elapsed),
-                SessionInfoRow(
-                    title: 'Stol narxi:', value: '$tablePrice so\'m'),
-                SessionInfoRow(title: 'Bar narxi:', value: '$orderPrice s\'om'),
-                SessionInfoRow(title: 'Jami narx:', value: '$totalPrice so\'m'),
-                
-              ],
+        return Provider<int>.value(
+  value: viewModel.session!.id!, // sessionId ni uzatyapti
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text('${table?.name} ${table?.number}'),
             ),
-          ),
-          bottomNavigationBar: Padding(
-            padding:  EdgeInsets.only(bottom: AppConstant.padding*2,right: AppConstant.padding,left: AppConstant.padding),
-            child: Row(
-              spacing: AppConstant.spacing,
-              children: [
-                Expanded(child: ElevatedButton(onPressed: ()=>Navigator.pushNamed(
-                      context,
-                      AppRoutes.order,
-                      arguments: viewModel.session?.id,
-                    ), child: Text('buyutmalar'))),
-                Expanded(child: ElevatedButton(onPressed: (){}, child: Text('yakunlash')))
-            
-              ],
+            body: Padding(
+              padding: EdgeInsets.all(AppConstant.padding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SessionInfoRow(title: 'Boshlangan vaqt:', value: startTime),
+                  SessionInfoRow(title: 'O\'tgan vaqt:', value: elapsed),
+                  SessionInfoRow(
+                      title: 'Stol narxi:', value: '$tablePrice so\'m'),
+                  SessionInfoRow(title: 'Bar narxi:', value: '$orderPrice s\'om'),
+                  SessionInfoRow(title: 'Jami narx:', value: '$totalPrice so\'m'),
+                  
+                ],
+              ),
+            ),
+            bottomNavigationBar: Padding(
+              padding:  EdgeInsets.only(bottom: AppConstant.padding*2,right: AppConstant.padding,left: AppConstant.padding),
+              child: Row(
+                spacing: AppConstant.spacing,
+                children: [
+                  Expanded(child: ElevatedButton(onPressed: ()=>Navigator.pushNamed(
+                        context,
+                        AppRoutes.order,
+                        arguments: viewModel.session?.id,
+                      ), child: Text('buyutmalar'))),
+                  Expanded(child: ElevatedButton(onPressed: (){}, child: Text('yakunlash')))
+              
+                ],
+              ),
             ),
           ),
         );

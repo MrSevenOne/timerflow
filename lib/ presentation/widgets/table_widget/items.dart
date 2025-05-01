@@ -34,8 +34,9 @@ class TableItem extends StatelessWidget {
           leading: CircleAvatar(
             child: Text(table.number.toString()),
           ),
-          title: Text('Narx: ${table.price} so‘m/soat'),
-          subtitle: Text('Holati: ${table.status}'),
+          title: Text(table.name),
+          subtitle: Text('Narx: ${table.price}'),
+          trailing: Text('Holati: ${table.status}'),
           onTap: onTap,
         ),
       ),

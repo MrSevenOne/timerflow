@@ -55,6 +55,18 @@ class FoodViewModel extends ChangeNotifier {
     }
   }
 
+  // Buyurtma miqdorini bazadan ochirish
+  Future<void> updateAmountFood(
+      {required int foodId, required int orderedQuantity}) async {
+    try {
+      await _repository.updateAmountFood(
+          foodId: foodId, orderedQuantity: orderedQuantity);
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+    }
+  }
+
   // O‘chirish
   Future<void> deleteFood(int id) async {
     try {

@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:timerflow/%20presentation/providers/drink_viewmodel.dart';
+import 'package:timerflow/%20presentation/widgets/drink_widget/drink_item.dart';
+import 'package:timerflow/%20presentation/widgets/order_widget/add/show_dialog/add_drink_dialog.dart';
+
+class DrinkTab extends StatefulWidget {
+  final int sessionId;
+  const DrinkTab({super.key, required this.sessionId});
+
+  @override
+  State<DrinkTab> createState() => _DrinkTabState();
+}
+
+class _DrinkTabState extends State<DrinkTab> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() =>
+        Provider.of<DrinkViewModel>(context, listen: false).getDrinks());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<DrinkViewModel>(
+      builder: (context, drinkViewModel, child) {
+        if (drinkViewModel.isLoading) {
+          return const Center(child: Text('loading...'));
+        } else if (drinkViewModel.drinkList.isEmpty) {
+          return const Center(child: Text('Ichimliklar mavjud emas'));
+        }
+        return ListView.builder(
+          itemCount: drinkViewModel.drinkList.length,
+          itemBuilder: (context, index) {
+            final drink = drinkViewModel.drinkList[index];
+            return DrinkItem(
+              drink: drink,
+              onTap: () => AddOrderDrinkDialog.show(
+                context: context,
+                drinkModel: drink,
+                sessionId: widget.sessionId,
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}

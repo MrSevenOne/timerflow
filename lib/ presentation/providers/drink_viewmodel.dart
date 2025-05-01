@@ -69,4 +69,17 @@ class DrinkViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // ichimlik sonini hisoblash
+
+  Future<void> updateAmountDrink(
+      {required int drinkId, required int orderedQuantity}) async {
+    try {
+      await _repository.updateAmountDrink(orderedQuantity, drinkId);
+      notifyListeners();
+    } catch (e) {
+      _error = e.toString();
+      notifyListeners();
+    }
+  }
 }

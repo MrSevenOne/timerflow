@@ -24,6 +24,31 @@ class FoodService {
         .eq('id', foodModel.id!);
   }
 
+  
+  Future<void> updateAmountFood({
+    required int foodId,
+    required int orderedQuantity,
+  }) async {
+    final response = await _client
+        .from(tableName)
+        .select('amount')
+        .eq('id', foodId)
+        .single();
+
+    final int currentAmount = response['amount'];
+
+    if (orderedQuantity > currentAmount) {
+      throw Exception('Yetarli miqdor mavjud emas');
+    }
+
+    final int newAmount = currentAmount - orderedQuantity;
+
+    await _client
+        .from(tableName)
+        .update({'amount': newAmount})
+        .eq('id', foodId);
+  }
+
   // DELETE
   Future<void> deleteFood({required int foodId}) async {
     await _client.from(tableName).delete().eq('id', foodId);

@@ -21,4 +21,30 @@ class DrinkService {
   Future<void> deleteDrink(int id) async {
     await _client.from(tableName).delete().eq('id', id);
   }
+
+
+    Future<void> updateAmountDrink({
+    required int drinkId,
+    required int orderedQuantity,
+  }) async {
+    final response = await _client
+        .from(tableName)
+        .select('amount')
+        .eq('id', drinkId)
+        .single();
+
+    final int currentAmount = response['amount'];
+
+    if (orderedQuantity > currentAmount) {
+      throw Exception('Yetarli miqdor mavjud emas');
+    }
+
+    final int newAmount = currentAmount - orderedQuantity;
+
+    await _client
+        .from(tableName)
+        .update({'amount': newAmount})
+        .eq('id', drinkId);
+  }
+
 }

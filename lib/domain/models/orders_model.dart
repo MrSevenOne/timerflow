@@ -38,8 +38,6 @@ class OrderDrinkModel {
   // Convert to JSON
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'created_at': createdAt?.toIso8601String(),
       'session_id': sessionId,
       'drink_id': drinkId,
       'quantity': quantity,
@@ -100,8 +98,6 @@ class OrderFoodModel {
   // Convert to JSON
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'created_at': createdAt?.toIso8601String(),
       'session_id': sessionId,
       'food_id': foodId,
       'quantity': quantity,

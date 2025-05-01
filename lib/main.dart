@@ -53,8 +53,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
           create: (_) => SessionViewModel(SessionRepository(SessionService())),
           ),
-          ChangeNotifierProvider(create: (_)=> OrderViewModel(repository: OrderRepository(OrderService())),
-          ),
+          
       ],
       child: MaterialApp(
         title: 'TimerFlow',

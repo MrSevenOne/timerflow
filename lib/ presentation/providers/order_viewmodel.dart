@@ -53,22 +53,24 @@ int get totalFoodPrice {
     _setLoading(false);
   }
 
-  Future<void> fetchDrinkOrdersBySessionId(int sessionId) async {
-    _setLoading(true);
-    try {
-      _drinkOrders = await repository.getDrinkOrdersBySessionId(sessionId);
-      _setError(null);
-    } catch (e) {
-      _setError('Session uchun ichimlik buyurtmalarini olishda xatolik: $e');
-    }
-    _setLoading(false);
+ Future<void> fetchDrinkOrdersBySessionId(int sessionId) async {
+  _setLoading(true);
+  try {
+    _drinkOrders = await repository.getDrinkOrdersBySessionId(sessionId);
+    _setError(null);
+    notifyListeners(); // <-- BU MUHIM
+  } catch (e) {
+    _setError('Session uchun ichimlik buyurtmalarini olishda xatolik: $e');
   }
+  _setLoading(false);
+}
 
-  Future<void> addDrinkOrder(OrderDrinkModel order) async {
+
+  Future<void> addDrinkOrder({required OrderDrinkModel order}) async {
     _setLoading(true);
     try {
       await repository.addDrinkOrder(order);
-      await fetchDrinkOrdersBySessionId(order.sessionId!);
+      await fetchDrinkOrdersBySessionId(order.sessionId);
     } catch (e) {
       _setError('Ichimlik buyurtmasini qo‘shishda xatolik: $e');
     }
@@ -79,7 +81,7 @@ int get totalFoodPrice {
     _setLoading(true);
     try {
       await repository.updateDrinkOrder(id, order);
-      await fetchDrinkOrdersBySessionId(order.sessionId!);
+      await fetchDrinkOrdersBySessionId(order.sessionId);
     } catch (e) {
       _setError('Ichimlik buyurtmasini yangilashda xatolik: $e');
     }
@@ -110,22 +112,24 @@ int get totalFoodPrice {
     _setLoading(false);
   }
 
-  Future<void> fetchFoodOrdersBySessionId(int sessionId) async {
-    _setLoading(true);
-    try {
-      _foodOrders = await repository.getFoodOrdersBySessionId(sessionId);
-      _setError(null);
-    } catch (e) {
-      _setError('Session uchun ovqat buyurtmalarini olishda xatolik: $e');
-    }
-    _setLoading(false);
+Future<void> fetchFoodOrdersBySessionId(int sessionId) async {
+  _setLoading(true);
+  try {
+    _foodOrders = await repository.getFoodOrdersBySessionId(sessionId);
+    _setError(null);
+    notifyListeners(); // <-- BU HAM
+  } catch (e) {
+    _setError('Session uchun ovqat buyurtmalarini olishda xatolik: $e');
   }
+  _setLoading(false);
+}
 
-  Future<void> addFoodOrder(OrderFoodModel order) async {
+
+  Future<void> addFoodOrder({required OrderFoodModel order}) async {
     _setLoading(true);
     try {
       await repository.addFoodOrder(order);
-      await fetchFoodOrdersBySessionId(order.sessionId!);
+      await fetchFoodOrdersBySessionId(order.sessionId);
     } catch (e) {
       _setError('Ovqat buyurtmasini qo‘shishda xatolik: $e');
     }
@@ -136,7 +140,7 @@ int get totalFoodPrice {
     _setLoading(true);
     try {
       await repository.updateFoodOrder(id, order);
-      await fetchFoodOrdersBySessionId(order.sessionId!);
+      await fetchFoodOrdersBySessionId(order.sessionId);
     } catch (e) {
       _setError('Ovqat buyurtmasini yangilashda xatolik: $e');
     }

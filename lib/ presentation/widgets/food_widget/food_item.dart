@@ -32,7 +32,8 @@ class FoodItem extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         child: ListTile(
           title: Text(food.name),
-          subtitle: Text('Kategoriya: ${food.amount} • Narxi: ${food.price} so‘m'),
+          subtitle: Text('narxi: ${food.price} so‘m'),
+          trailing: Text("soni: ${food.amount}"),
           onTap: onTap,
         ),
       ),

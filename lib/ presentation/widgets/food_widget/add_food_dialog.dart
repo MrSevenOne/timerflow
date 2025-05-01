@@ -10,8 +10,7 @@ class AddFoodDialog extends StatefulWidget {
   static Future<void> show(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (_) => 
-         AddFoodDialog(),
+      builder: (cotext) => AddFoodDialog(),
     );
   }
 
@@ -25,20 +24,15 @@ class _AddFoodDialogState extends State<AddFoodDialog> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _priceController.dispose();
-    _amountController.dispose();
-    super.dispose();
-  }
-
   void _saveFood() {
     if (_formKey.currentState!.validate()) {
       int price = int.parse(_priceController.text);
       int amount = int.parse(_amountController.text);
-      final food =
-          FoodModel(name: _nameController.text, price: price, amount: amount,);
+      final food = FoodModel(
+        name: _nameController.text,
+        price: price,
+        amount: amount,
+      );
 
       context.read<FoodViewModel>().addFood(food);
       Navigator.pop(context);
@@ -47,22 +41,23 @@ class _AddFoodDialogState extends State<AddFoodDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(AppConstant.padding),
-      child: Form(
+    return AlertDialog(
+      contentPadding: EdgeInsets.all(AppConstant.padding),
+      content: Form(
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          spacing: AppConstant.spacing,
           children: [
             const Text('Yangi taom qo‘shish',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            const SizedBox(height: 12),
             TextFormField(
               controller: _nameController,
               decoration: const InputDecoration(labelText: 'Nomi'),
               validator: (value) =>
                   value == null || value.isEmpty ? 'Nomini kiriting' : null,
             ),
+            const SizedBox(height: 12),
             TextFormField(
               controller: _priceController,
               decoration: const InputDecoration(labelText: 'Narxi'),
@@ -70,6 +65,7 @@ class _AddFoodDialogState extends State<AddFoodDialog> {
               validator: (value) =>
                   value == null || value.isEmpty ? 'Narxni kiriting' : null,
             ),
+            const SizedBox(height: 12),
             TextFormField(
               controller: _amountController,
               keyboardType: TextInputType.number,
@@ -77,14 +73,15 @@ class _AddFoodDialogState extends State<AddFoodDialog> {
               validator: (value) =>
                   value == null || value.isEmpty ? 'Sonini kiriting' : null,
             ),
-            const SizedBox(height: 20),
-            TextButton(
-              onPressed: _saveFood,
-              child: const Text('Qo‘shish'),
-            ),
           ],
         ),
       ),
+      actions: [
+        TextButton(
+          onPressed: _saveFood,
+          child: const Text('Qo‘shish'),
+        ),
+      ],
     );
   }
 }

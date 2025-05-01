@@ -1,4 +1,3 @@
-
 import 'package:timerflow/domain/models/food_model.dart';
 import 'package:timerflow/data/services/supabase/database/food_service.dart';
 
@@ -17,6 +16,11 @@ class FoodRepository {
 
   Future<void> updateFood(FoodModel foodModel) async {
     await _service.updateFood(foodModel: foodModel);
+  }
+
+  Future<void> updateAmountFood(
+      {required int foodId, required int orderedQuantity}) async {
+    await _service.updateAmountFood(foodId: foodId, orderedQuantity: orderedQuantity);
   }
 
   Future<void> deleteFood(int id) async {

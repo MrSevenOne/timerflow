@@ -9,7 +9,7 @@ class AddDrinkDialog extends StatefulWidget {
   static Future<void> show(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (_) => const Dialog(child: AddDrinkDialog()),
+      builder: (context) => const Dialog(child: AddDrinkDialog()),
     );
   }
 

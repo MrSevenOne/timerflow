@@ -10,7 +10,7 @@ class FoodOrderItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        title: Text('${order.foodModel?.name ?? 'Nomaʼlum'}'),
+        title: Text(order.foodModel?.name ?? 'Nomaʼlum'),
         trailing: Text('Soni: ${order.quantity}'),
         subtitle: Text('Narxi: ${order.foodModel?.price ?? 0} so\'m'),
       ),
