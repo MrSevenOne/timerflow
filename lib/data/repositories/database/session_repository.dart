@@ -10,7 +10,7 @@ class SessionRepository {
   Future<void> addSession(
           {required SessionModel sessionModel,
           required int tableId,
-          required String status}) =>
+          required int status}) =>
       service.addSession(
           sessionModel: sessionModel, tableId: tableId, status: status);
   //deleteSession

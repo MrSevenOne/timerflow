@@ -63,7 +63,7 @@ class SessionService {
   Future<void> addSession({
     required SessionModel sessionModel,
     required int tableId,
-    required String status,
+    required int status,
   }) async {
     try {
       await supabase

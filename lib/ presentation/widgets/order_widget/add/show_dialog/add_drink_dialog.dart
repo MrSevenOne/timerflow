@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/drink_viewmodel.dart';
-import 'package:timerflow/%20presentation/providers/order_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/order/order_viewmodel.dart';
 import 'package:timerflow/%20presentation/widgets/QuantitySelector.dart';
 import 'package:timerflow/%20presentation/widgets/order_widget/add/add_info.dart';
 import 'package:timerflow/domain/models/drink_model.dart';
@@ -73,10 +73,8 @@ class AddOrderDrinkDialog extends StatelessWidget {
                       quantity: selectedQuantity,
                     );
 
-                    
-
                     await orderViewModel.addDrinkOrder(order: order);
-await drinkViewModel.updateAmountDrink(
+                    await drinkViewModel.updateAmountDrink(
                       drinkId: drinkModel.id!,
                       orderedQuantity: selectedQuantity,
                     );

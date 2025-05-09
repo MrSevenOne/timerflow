@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/drink_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
 import 'package:timerflow/%20presentation/widgets/drink_widget/add_drink_dialog.dart';
 import 'package:timerflow/%20presentation/widgets/drink_widget/drink_item.dart';
 

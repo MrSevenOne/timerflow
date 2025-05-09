@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/food_viewmodel.dart';
-import 'package:timerflow/%20presentation/providers/order_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/food/food_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/order/order_viewmodel.dart';
 import 'package:timerflow/%20presentation/widgets/QuantitySelector.dart';
 import 'package:timerflow/%20presentation/widgets/order_widget/add/add_info.dart';
 import 'package:timerflow/domain/models/food_model.dart';
@@ -10,7 +10,8 @@ import 'package:timerflow/domain/models/orders_model.dart';
 class AddOrderFoodDialog extends StatelessWidget {
   final FoodModel foodModel;
   final int sessionId;
-  const AddOrderFoodDialog({super.key, required this.foodModel,required this.sessionId});
+  const AddOrderFoodDialog(
+      {super.key, required this.foodModel, required this.sessionId});
 
   static void show({
     required BuildContext context,
@@ -19,7 +20,10 @@ class AddOrderFoodDialog extends StatelessWidget {
   }) {
     showDialog(
       context: context,
-      builder: (context) => AddOrderFoodDialog(foodModel: foodModel,sessionId: sessionId,),
+      builder: (context) => AddOrderFoodDialog(
+        foodModel: foodModel,
+        sessionId: sessionId,
+      ),
     );
   }
 
@@ -58,7 +62,6 @@ class AddOrderFoodDialog extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () async {
-
                     debugPrint("session id: $sessionId");
 
                     OrderFoodModel order = OrderFoodModel(
@@ -66,11 +69,11 @@ class AddOrderFoodDialog extends StatelessWidget {
                       foodId: foodModel.id!,
                       quantity: selectedQuantity,
                     );
-                   
+
                     // Buyurtmani yozishni bazaga yozish
                     await orderViewModel.addFoodOrder(order: order);
 
-                     // Mahsulot miqdorini kamaytirish
+                    // Mahsulot miqdorini kamaytirish
                     await foodViewModel.updateAmountFood(
                       foodId: foodModel.id!,
                       orderedQuantity: selectedQuantity,

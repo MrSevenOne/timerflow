@@ -5,10 +5,10 @@ class TableRepository {
   final TableService _tableService;
 
   TableRepository(this._tableService);
-//ADD
+//GET
   Future<List<TableModel>> getAllTables() async {
     try {
-      return await _tableService.fetchTables();
+      return await _tableService.fetchTableForCurrentUser();
     } catch (e) {
       throw 'getAllTables $e';
     }
@@ -44,7 +44,7 @@ class TableRepository {
 //CHANGE STATUS
   Future<void> changeTableStatus({
     required int tableId,
-    required String status,
+    required int status,
   }) async {
     try {
       await _tableService.updateStatus(tableId: tableId, status: status);

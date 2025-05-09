@@ -6,9 +6,20 @@ class DrinkService {
   final String tableName = 'drink';
 
   Future<List<DrinkModel>> fetchDrinks() async {
-    final response = await _client.from(tableName).select().order('name');
-    return (response as List).map((e) => DrinkModel.fromJson(e)).toList();
+  final userId = _client.auth.currentUser?.id;
+  if (userId == null) {
+    throw Exception('User not logged in');
   }
+
+  final response = await _client
+      .from(tableName)
+      .select()
+      .eq('user_id', userId)
+      .order('name');
+
+  return (response as List).map((e) => DrinkModel.fromJson(e)).toList();
+}
+
 
   Future<void> addDrink(DrinkModel drink) async {
     await _client.from(tableName).insert(drink.toJson());

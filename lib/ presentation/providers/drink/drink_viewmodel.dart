@@ -26,11 +26,11 @@ class DrinkViewModel extends ChangeNotifier {
     _setLoading(true);
     try {
       _drinkList = await _repository.getAllDrinks();
-      print(_drinkList.toList());
+      debugPrint(_drinkList.toList().toString());
       _error = null;
     } catch (e) {
       _error = e.toString();
-      print(_error);
+      debugPrint(_error);
     } finally {
       _setLoading(false);
     }

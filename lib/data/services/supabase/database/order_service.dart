@@ -42,16 +42,36 @@ class OrderService {
     }
   }
 
-  // Yangi DrinkOrder qo'shish
-  Future<void> addDrinkOrder(OrderDrinkModel order) async {
-    try {
+ // Yangi yoki mavjud DrinkOrder ni qo'shish va quantity ni oshirish
+Future<void> addDrinkOrder(OrderDrinkModel order) async {
+  try {
+    // Avval mavjud yozuvni tekshir
+    final existing = await supabase
+        .from(orderDrinkTable)
+        .select()
+        .eq('session_id', order.sessionId)
+        .eq('drink_id', order.drinkId)
+        .maybeSingle();
+
+    if (existing != null) {
+      // Mavjud bo‘lsa, quantity ni oshirib yangilash
+      final updatedQuantity = (existing['quantity'] as int) + order.quantity;
+      await supabase.from(orderDrinkTable).update({
+        'quantity': updatedQuantity,
+      }).eq('id', existing['id']);
+
+      debugPrint('Drink order updated (quantity increased): session_id=${order.sessionId}, drink_id=${order.drinkId}, new quantity=$updatedQuantity');
+    } else {
+      // Mavjud bo‘lmasa, yangi yozuv qo‘shish
       await supabase.from(orderDrinkTable).insert(order.toJson());
-      debugPrint('addDrinkOrder added: ${order.toJson()}');
-    } catch (e) {
-      debugPrint('Error adding addDrinkOrder: $e');
-      rethrow;
+      debugPrint('New drink order added: ${order.toJson()}');
     }
+  } catch (e) {
+    debugPrint('Error in addDrinkOrder (with check): $e');
+    rethrow;
   }
+}
+
 
   // DrinkOrder yangilash
   Future<void> updateDrinkOrder(int id, OrderDrinkModel order) async {
@@ -114,15 +134,35 @@ class OrderService {
   }
 
   // Yangi FoodOrder qo'shish
-  Future<void> addFoodOrder(OrderFoodModel order) async {
-    try {
+Future<void> addFoodOrder(OrderFoodModel order) async {
+  try {
+    // Avval mavjud yozuvni tekshir
+    final existing = await supabase
+        .from(orderFoodTable)
+        .select()
+        .eq('session_id', order.sessionId)
+        .eq('food_id', order.foodId)
+        .maybeSingle();
+
+    if (existing != null) {
+      // Mavjud bo‘lsa, quantity ni oshirib yangilash
+      final updatedQuantity = (existing['quantity'] as int) + order.quantity;
+      await supabase.from(orderFoodTable).update({
+        'quantity': updatedQuantity,
+      }).eq('id', existing['id']);
+
+      debugPrint('Food order updated (quantity increased): session_id=${order.sessionId}, food_id=${order.foodId}, new quantity=$updatedQuantity');
+    } else {
+      // Mavjud bo‘lmasa, yangi yozuv qo‘shish
       await supabase.from(orderFoodTable).insert(order.toJson());
-      debugPrint('addFoodOrder added: ${order.toJson()}');
-    } catch (e) {
-      debugPrint('Error adding addFoodOrder: $e');
-      rethrow;
+      debugPrint('New food order added: ${order.toJson()}');
     }
+  } catch (e) {
+    debugPrint('Error in addFoodOrder (with check): $e');
+    rethrow;
   }
+}
+
 
   // FoodOrder yangilash
   Future<void> updateFoodOrder(int id, OrderFoodModel order) async {

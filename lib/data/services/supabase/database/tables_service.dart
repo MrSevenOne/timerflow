@@ -5,11 +5,21 @@ class TableService {
   final _client = Supabase.instance.client;
   final String tableName = 'tables';
 //GET
-  Future<List<TableModel>> fetchTables() async {
-    final response = await _client.from(tableName).select().order('number');
-
-    return (response as List).map((e) => TableModel.fromJson(e)).toList();
+Future<List<TableModel>> fetchTableForCurrentUser() async {
+  final userId = _client.auth.currentUser?.id;
+  if (userId == null) {
+    throw Exception('User not logged in');
   }
+
+  final response = await _client
+      .from(tableName)
+      .select()
+      .eq('user_id', userId)
+      .order('id');
+
+  return (response as List).map((e) => TableModel.fromJson(e)).toList();
+}
+
 
 //ADD
   Future<void> addTable({required TableModel tableModel}) async {
@@ -31,7 +41,7 @@ class TableService {
 
 //STATUS UPDATE
   Future<void> updateStatus(
-      {required int tableId, required String status}) async {
+      {required int tableId, required int status}) async {
     await _client.from('tables').update({'status': status}).eq('id', tableId);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:timerflow/%20presentation/providers/auth/auth_viewmodel.dart';
 import 'package:timerflow/%20presentation/providers/tables_viewmodel.dart';
 import 'package:timerflow/config/constant/app_constant.dart';
 import 'package:timerflow/domain/models/table_model.dart';
@@ -37,13 +38,15 @@ class _AddTableDialogState extends State<AddTableDialog> {
   void _saveTable() {
     final int number = int.parse(_numberController.text);
     final int price = int.parse(_priceController.text);
+    final userId = context.read<AuthViewModel>().user?.id;
 
     if (_formKey.currentState!.validate()) {
       final table = TableModel(
         name: _namerController.text,
         number: number,
-        status: 'empty',
+        status: 0,
         price: price,
+        userId: userId!,
       );
 
       final viewModel = context.read<TableViewModel>();

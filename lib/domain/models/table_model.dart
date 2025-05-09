@@ -3,16 +3,18 @@ class TableModel {
   final DateTime? createTime;
   final String name;
   final int number;
-  final String status;
+  final int status;
   final int price;
+  final String userId;
 
   TableModel({
-     this.id,
-     this.createTime,
+    this.id,
+    this.createTime,
     required this.name,
     required this.number,
     required this.status,
     required this.price,
+   required this.userId,
   });
 
   factory TableModel.fromJson(Map<String, dynamic> json) => TableModel(
@@ -22,6 +24,7 @@ class TableModel {
         number: json['number'],
         status: json['status'],
         price: json['price'],
+        userId: json['user_id'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -29,6 +32,7 @@ class TableModel {
         'number': number,
         'status': status,
         'price': price,
+        'user_id' : userId,
       };
 
   TableModel copyWith({
@@ -36,8 +40,9 @@ class TableModel {
     DateTime? createTime,
     String? name,
     int? number,
-    String? status,
+    int? status,
     int? price,
+    String? userId,
   }) {
     return TableModel(
       id: id ?? this.id,
@@ -46,6 +51,7 @@ class TableModel {
       number: number ?? this.number,
       status: status ?? this.status,
       price: price ?? this.price,
+      userId: userId ?? this.userId,
     );
   }
 }

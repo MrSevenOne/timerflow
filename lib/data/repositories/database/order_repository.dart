@@ -19,10 +19,6 @@ class OrderRepository {
   Future<void> addDrinkOrder(OrderDrinkModel order) =>
       service.addDrinkOrder(order);
 
-  // Drink order yangilash
-  Future<void> updateDrinkOrder(int id, OrderDrinkModel order) =>
-      service.updateDrinkOrder(id, order);
-
   // Drink order o'chirish
   Future<void> deleteDrinkOrder(int id) => service.deleteDrinkOrder(id);
 
@@ -39,10 +35,6 @@ class OrderRepository {
   // Food order qo'shish
   Future<void> addFoodOrder(OrderFoodModel order) =>
       service.addFoodOrder(order);
-
-  // Food order yangilash
-  Future<void> updateFoodOrder(int id, OrderFoodModel order) =>
-      service.updateFoodOrder(id, order);
 
   // Food order o'chirish
   Future<void> deleteFoodOrder(int id) => service.deleteFoodOrder(id);

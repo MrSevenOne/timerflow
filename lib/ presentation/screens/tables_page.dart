@@ -20,6 +20,7 @@ class _TablePageState extends State<TablePage> {
     super.initState();
     // ViewModel dan stol ma'lumotlarini olish
     Future.microtask(() =>
+        // ignore: use_build_context_synchronously
         Provider.of<TableViewModel>(context, listen: false).fetchTables());
   }
 
@@ -59,11 +60,11 @@ class _TablePageState extends State<TablePage> {
                                     table, // <<== mana bu qator qo‘shiladi
                               );
 
-                              if (table.status == 'empty') {
+                              if (table.status == 0) {
                                 StartSessionDialog.show(
                                     context: context,
                                     sessionModel: sessionModel);
-                              } else if (table.status == 'busy') {
+                              } else if (table.status == 1) {
                                 Navigator.pushNamed(
                                   context,
                                   AppRoutes.session,

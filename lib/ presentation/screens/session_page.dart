@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/order_viewmodel.dart';
-import 'package:timerflow/%20presentation/providers/session_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/order/order_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/session/session_report_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/session/session_viewmodel.dart';
+import 'package:timerflow/%20presentation/widgets/session_widget/session_completion.dart';
 import 'package:timerflow/%20presentation/widgets/session_widget/session_info.dart';
 import 'package:timerflow/config/constant/app_constant.dart';
 import 'package:timerflow/routers/app_routers.dart';
@@ -17,102 +19,98 @@ class SessionPage extends StatefulWidget {
 }
 
 class _SessionPageState extends State<SessionPage> {
-@override
-void initState() {
-  super.initState();
+  @override
+  void initState() {
+    super.initState();
 
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
-    final sessionViewModel =
-        Provider.of<SessionViewModel>(context, listen: false);
-    final orderViewModel =
-        Provider.of<OrderViewModel>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final sessionViewModel =
+          Provider.of<SessionViewModel>(context, listen: false);
+      final orderViewModel =
+          Provider.of<OrderViewModel>(context, listen: false);
 
-    await sessionViewModel.fetchSessionByTableId(tableId: widget.tableId);
+      await sessionViewModel.fetchSessionByTableId(tableId: widget.tableId);
 
-    final sessionId = sessionViewModel.session?.id;
+      final sessionId = sessionViewModel.session?.id;
       await orderViewModel.fetchDrinkOrdersBySessionId(sessionId!);
       await orderViewModel.fetchFoodOrdersBySessionId(sessionId);
-    
-  });
-}
-
+    });
+  }
+  
 
 
   @override
   Widget build(BuildContext context) {
-    final orderViewModel = Provider.of<OrderViewModel>(context, listen: false);
-
-    return Consumer<SessionViewModel>(
-      builder: (context, viewModel, child) {
-        if (viewModel.isLoading) {
+    
+    return Consumer3<SessionViewModel, OrderViewModel, SessionReportViewModel>(
+      builder: (context, sessionViewModel, orderViewModel,
+          sessionReportViewModel, _) {
+            
+        if (sessionViewModel.isLoading) {
           return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+              body: Center(child: CircularProgressIndicator()));
         }
 
-        if (viewModel.error != null) {
-          debugPrint("error: ${viewModel.error}");
+        if (sessionViewModel.error != null) {
           return Scaffold(
-            body: Center(
-              child: Text('Xatolik: ${viewModel.error}'),
-            ),
-          );
+              body: Center(child: Text('Xatolik: ${sessionViewModel.error}')));
         }
 
-        if (viewModel.session == null) {
-          return const Scaffold(
-            body: Center(
-              child: Text('Session topilmadi'),
-            ),
-          );
+        if (sessionViewModel.session == null) {
+          return const Scaffold(body: Center(child: Text('Session topilmadi')));
         }
 
-        final startTime =
-            DateFormatter.formatWithMonth(date: viewModel.session!.start_time);
-
-        final elapsed = viewModel.elapsedTime;
-        final tablePrice = NumberFormatter.price(viewModel.tablePrice);
+        final startTime = DateFormatter.formatWithMonth(
+            date: sessionViewModel.session!.start_time);
+        final elapsed = sessionViewModel.elapsedTime;
+        final tablePrice = NumberFormatter.price(sessionViewModel.tablePrice);
         final orderPrice =
             NumberFormatter.price(orderViewModel.totalOrderPrice);
-        final total = viewModel.tablePrice + orderViewModel.totalOrderPrice;
+        final total =
+            sessionViewModel.tablePrice + orderViewModel.totalOrderPrice;
         final totalPrice = NumberFormatter.price(total);
-        final table = viewModel.session?.tableModel;
+        final table = sessionViewModel.session?.tableModel;
 
-        return Provider<int>.value(
-  value: viewModel.session!.id!, // sessionId ni uzatyapti
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text('${table?.name} ${table?.number}'),
+        return Scaffold(
+          appBar: AppBar(title: Text('${table?.name} ${table?.number}')),
+          body: Padding(
+            padding: EdgeInsets.all(AppConstant.padding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SessionInfoRow(title: 'Boshlangan vaqt:', value: startTime),
+                SessionInfoRow(title: 'O\'tgan vaqt:', value: elapsed),
+                SessionInfoRow(
+                    title: 'Stol narxi:', value: '$tablePrice so\'m'),
+                SessionInfoRow(title: 'Bar narxi:', value: '$orderPrice so\'m'),
+                SessionInfoRow(title: 'Jami narx:', value: '$totalPrice so\'m'),
+              ],
             ),
-            body: Padding(
-              padding: EdgeInsets.all(AppConstant.padding),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SessionInfoRow(title: 'Boshlangan vaqt:', value: startTime),
-                  SessionInfoRow(title: 'O\'tgan vaqt:', value: elapsed),
-                  SessionInfoRow(
-                      title: 'Stol narxi:', value: '$tablePrice so\'m'),
-                  SessionInfoRow(title: 'Bar narxi:', value: '$orderPrice s\'om'),
-                  SessionInfoRow(title: 'Jami narx:', value: '$totalPrice so\'m'),
-                  
-                ],
-              ),
-            ),
-            bottomNavigationBar: Padding(
-              padding:  EdgeInsets.only(bottom: AppConstant.padding*2,right: AppConstant.padding,left: AppConstant.padding),
-              child: Row(
-                spacing: AppConstant.spacing,
-                children: [
-                  Expanded(child: ElevatedButton(onPressed: ()=>Navigator.pushNamed(
-                        context,
-                        AppRoutes.order,
-                        arguments: viewModel.session?.id,
-                      ), child: Text('buyutmalar'))),
-                  Expanded(child: ElevatedButton(onPressed: (){}, child: Text('yakunlash')))
-              
-                ],
-              ),
+          ),
+          bottomNavigationBar: Padding(
+            padding: EdgeInsets.only(
+                bottom: AppConstant.padding * 2,
+                right: AppConstant.padding,
+                left: AppConstant.padding),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.order,
+                      arguments: sessionViewModel.session?.id,
+                    ),
+                    child: Text('buyurtmalar'),
+                  ),
+                ),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => SessionCompletionDialog.show(context: context, sessionViewModel: sessionViewModel, orderViewModel: orderViewModel, sessionReportViewModel: sessionReportViewModel,tableId: widget.tableId,),
+                    child: Text('yakunlash'),
+                  ),
+                )
+              ],
             ),
           ),
         );

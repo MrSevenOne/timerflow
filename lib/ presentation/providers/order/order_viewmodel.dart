@@ -77,17 +77,6 @@ int get totalFoodPrice {
     _setLoading(false);
   }
 
-  Future<void> updateDrinkOrder(int id, OrderDrinkModel order) async {
-    _setLoading(true);
-    try {
-      await repository.updateDrinkOrder(id, order);
-      await fetchDrinkOrdersBySessionId(order.sessionId);
-    } catch (e) {
-      _setError('Ichimlik buyurtmasini yangilashda xatolik: $e');
-    }
-    _setLoading(false);
-  }
-
   Future<void> deleteDrinkOrder(int id, int sessionId) async {
     _setLoading(true);
     try {
@@ -132,17 +121,6 @@ Future<void> fetchFoodOrdersBySessionId(int sessionId) async {
       await fetchFoodOrdersBySessionId(order.sessionId);
     } catch (e) {
       _setError('Ovqat buyurtmasini qo‘shishda xatolik: $e');
-    }
-    _setLoading(false);
-  }
-
-  Future<void> updateFoodOrder(int id, OrderFoodModel order) async {
-    _setLoading(true);
-    try {
-      await repository.updateFoodOrder(id, order);
-      await fetchFoodOrdersBySessionId(order.sessionId);
-    } catch (e) {
-      _setError('Ovqat buyurtmasini yangilashda xatolik: $e');
     }
     _setLoading(false);
   }

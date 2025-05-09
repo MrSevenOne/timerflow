@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/food_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/food/food_viewmodel.dart';
 import 'package:timerflow/%20presentation/widgets/food_widget/food_item.dart';
 import 'package:timerflow/%20presentation/widgets/order_widget/add/show_dialog/add_food_dialog.dart';
 
 class FoodTab extends StatefulWidget {
+  // ignore: prefer_typing_uninitialized_variables
   final sessionId;
   const FoodTab({super.key, required this.sessionId});
 

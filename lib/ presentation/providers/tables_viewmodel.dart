@@ -65,7 +65,7 @@ class TableViewModel extends ChangeNotifier {
   }
 
   // Change status
-  Future<void> updateStatus(int tableId, String status) async {
+  Future<void> updateStatus(int tableId,status) async {
     try {
       await _tableRepository.changeTableStatus(
           tableId: tableId, status: status);

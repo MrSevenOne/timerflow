@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/drink_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
 import 'package:timerflow/domain/models/drink_model.dart';
 
 class EditDrinkDialog extends StatefulWidget {

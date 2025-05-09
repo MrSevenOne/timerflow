@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/food_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/food/food_viewmodel.dart';
 import 'package:timerflow/domain/models/food_model.dart';
 
 class EditFoodDialog extends StatefulWidget {
@@ -89,6 +89,7 @@ class _EditFoodDialogState extends State<EditFoodDialog> {
                 amount: int.tryParse(_amountController.text.trim()),
               );
               await foodProvider.updateFood(updatedFood);
+              // ignore: use_build_context_synchronously
               Navigator.pop(context);
             }
           },

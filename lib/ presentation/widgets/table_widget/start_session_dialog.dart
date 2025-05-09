@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/tables_viewmodel.dart';
 import 'package:timerflow/domain/models/session_model.dart';
 import '../../../routers/app_routers.dart';
-import '../../providers/session_viewmodel.dart';
+import '../../providers/session/session_viewmodel.dart';
 
 class StartSessionDialog extends StatelessWidget {
   final SessionModel sessionModel;
@@ -39,7 +39,7 @@ class StartSessionDialog extends StatelessWidget {
             await session.addSession(
               sessionModel: sessionModel,
               tableId: sessionModel.table_id,
-              status: 'busy',
+              status: 1,
             );
 
             // ignore: use_build_context_synchronously

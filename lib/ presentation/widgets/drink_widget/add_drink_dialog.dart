@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/drink_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/auth/auth_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
 import 'package:timerflow/domain/models/drink_model.dart';
 
 class AddDrinkDialog extends StatefulWidget {
@@ -27,6 +28,7 @@ class _AddDrinkDialogState extends State<AddDrinkDialog> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<DrinkViewModel>(context, listen: false);
+    final userId = context.read<AuthViewModel>().user?.id;
 
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -48,6 +50,7 @@ class _AddDrinkDialogState extends State<AddDrinkDialog> {
                   price: int.parse(priceController.text),
                   volume: double.parse(volumeController.text),
                   amount: int.parse(amountController.text),
+                  userId: userId!,
                 );
                 await provider.addDrink(model);
                 // ignore: use_build_context_synchronously

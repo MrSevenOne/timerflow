@@ -4,6 +4,7 @@ class DrinkModel {
   final int price;
   final dynamic volume;
   final int amount;
+  final String userId;
 
   DrinkModel({
     this.id,
@@ -11,6 +12,7 @@ class DrinkModel {
     required this.price,
     required this.volume,
     required this.amount,
+    required this.userId,
   });
 
   factory DrinkModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class DrinkModel {
       price: json['price'],
       volume: json['volume'],
       amount: json['amount'],
+      userId: json['user_id'],
     );
   }
 
@@ -29,6 +32,7 @@ class DrinkModel {
       'price': price,
       'volume': volume,
       'amount': amount,
+      'user_id': userId,
     };
   }
 
@@ -38,6 +42,7 @@ class DrinkModel {
     int? price,
     dynamic volume,
     int? amount,
+    String? userId,
   }) {
     return DrinkModel(
       id: id ?? this.id,
@@ -45,6 +50,7 @@ class DrinkModel {
       price: price ?? this.price,
       volume: volume ?? this.volume,
       amount: amount ?? this.amount,
+      userId:  userId ?? this.userId,
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/drink_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
 import 'package:timerflow/%20presentation/widgets/drink_widget/drink_item.dart';
 import 'package:timerflow/%20presentation/widgets/order_widget/add/show_dialog/add_drink_dialog.dart';
 
@@ -17,6 +17,7 @@ class _DrinkTabState extends State<DrinkTab> {
   void initState() {
     super.initState();
     Future.microtask(() =>
+        // ignore: use_build_context_synchronously
         Provider.of<DrinkViewModel>(context, listen: false).getDrinks());
   }
 
