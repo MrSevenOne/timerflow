@@ -1,41 +1,54 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
-  final _client = Supabase.instance.client;
+  final SupabaseClient _client = Supabase.instance.client;
 
-  Future<AuthResponse> signIn(String email, String password) async {
+  /// SIGN IN
+  Future<AuthResponse?> signIn(String email, String password) async {
     try {
       final response = await _client.auth.signInWithPassword(
         email: email,
         password: password,
       );
       return response;
+    } on AuthException catch (e) {
+      throw Exception('Login failed: ${e.message}');
     } catch (e) {
-      rethrow;
+      throw Exception('Unexpected error: $e');
     }
   }
 
-  Future<AuthResponse> signUp(String email, String password) async {
+  /// SIGN UP
+  Future<AuthResponse?> signUp(String email, String password) async {
     try {
       final response = await _client.auth.signUp(
         email: email,
         password: password,
       );
       return response;
+    } on AuthException catch (e) {
+      throw Exception('Signup failed: ${e.message}');
     } catch (e) {
-      rethrow;
+      throw Exception('Unexpected error: $e');
     }
   }
 
-  Future<void> signOut() async {
+  /// SIGN OUT
+  Future<void> signOut({SignOutScope scope = SignOutScope.local}) async {
     try {
-      await _client.auth.signOut();
+      await _client.auth.signOut(scope: scope);
     } catch (e) {
-      rethrow;
+      throw Exception('Logout failed: $e');
     }
   }
 
+  /// GET CURRENT USER
   User? getCurrentUser() {
     return _client.auth.currentUser;
+  }
+
+  /// GET SESSION TOKEN
+  Session? getCurrentSession() {
+    return _client.auth.currentSession;
   }
 }

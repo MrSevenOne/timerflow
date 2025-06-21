@@ -7,7 +7,6 @@ class UserRepository {
 
   UserRepository(this._userService);
 
-  // FETCH 
   Future<UserModel?> fetchUser() async {
     try {
       final authId = Supabase.instance.client.auth.currentUser?.id;
@@ -18,7 +17,6 @@ class UserRepository {
     }
   }
 
-  // CREATE
   Future<void> addUser({required UserModel userModel}) async {
     try {
       await _userService.addUser(userModel: userModel);
@@ -27,12 +25,19 @@ class UserRepository {
     }
   }
 
-  // UPDATE
   Future<void> updateUserInfo({required UserModel userModel}) async {
     try {
       await _userService.updateUser(userModel: userModel);
     } catch (e) {
       throw 'updateUserInfo $e';
+    }
+  }
+
+  Future<void> updateFullUser({required UserModel userModel}) async {
+    try {
+      await _userService.updateFullUser(userModel: userModel);
+    } catch (e) {
+      throw 'updateFullUser $e';
     }
   }
 }

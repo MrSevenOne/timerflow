@@ -1,3 +1,5 @@
+import 'package:timerflow/utils/formatter/number_formatted.dart';
+
 class TableModel {
   final int? id;
   final DateTime? createTime;
@@ -14,8 +16,11 @@ class TableModel {
     required this.number,
     required this.status,
     required this.price,
-   required this.userId,
+    required this.userId,
   });
+
+  /// ✅ Formatlangan narx
+  String get formattedPrice => '${NumberFormatter.price(price)} so\'m';
 
   factory TableModel.fromJson(Map<String, dynamic> json) => TableModel(
         id: json['id'],
@@ -32,7 +37,7 @@ class TableModel {
         'number': number,
         'status': status,
         'price': price,
-        'user_id' : userId,
+        'user_id': userId,
       };
 
   TableModel copyWith({

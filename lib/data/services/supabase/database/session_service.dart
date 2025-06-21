@@ -2,11 +2,28 @@ import 'package:flutter/foundation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timerflow/data/services/supabase/database/tables_service.dart';
 import 'package:timerflow/domain/models/session_model.dart';
+import 'package:timerflow/utils/user/user_manager.dart';
 
 class SessionService {
   final supabase = Supabase.instance.client;
   TableService tableService = TableService();
   final tableName = 'session';
+
+   // USER ID bo'yicha sessionlarni olish
+  Future<List<SessionModel>> fetchSessionsByUser() async {
+    final userId = UserManager.currentUserId;
+    if (userId == null) {
+      throw Exception('User ID topilmadi');
+    }
+
+    final response = await supabase
+        .from(tableName)
+        .select()
+        .eq('user_id', userId)
+        .order('start_time', ascending: false); // yoki kerakli ustun bo'yicha
+
+    return (response as List).map((e) => SessionModel.fromJson(e)).toList();
+  }
 
   // Barcha sessionlarni bog'langan jadval bilan birga olish
   Future<List<SessionModel>> getSessionsWithDetails() async {

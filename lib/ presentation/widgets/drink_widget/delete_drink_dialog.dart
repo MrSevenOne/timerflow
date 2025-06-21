@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
 import 'package:timerflow/domain/models/drink_model.dart';
@@ -11,12 +12,12 @@ class DeleteDrinkDialog extends StatelessWidget {
     await showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("Ichimlikni o‘chirish"),
-        content: Text('${drinkModel.name} nomli ichimlik o‘chirilsinmi?'),
+        title:  Text("delete_drink".tr),
+        content: Text('${drinkModel.name} ${'drink_delete_want'.tr}'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text("Bekor qilish"),
+            child:  Text("cencal".tr),
           ),
           TextButton(
             onPressed: () async {
@@ -25,7 +26,7 @@ class DeleteDrinkDialog extends StatelessWidget {
               // ignore: use_build_context_synchronously
               Navigator.pop(context);
             },
-            child: const Text('Tasdiqlash'),
+            child:  Text('confirmation'.tr),
           ),
         ],
       ),

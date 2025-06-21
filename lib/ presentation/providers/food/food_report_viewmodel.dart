@@ -28,6 +28,20 @@ class FoodReportViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> fetchBySessionReportId(int sessionReportId) async {
+    _setLoading(true);
+    try {
+      _reports =
+          await _repository.getFoodReportsBySessionReportId(sessionReportId);
+      _error = null;
+    } catch (e) {
+      _error = e.toString();
+      _reports = [];
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   Future<void> addReport(FoodReportModel model) async {
     _setLoading(true);
     try {
@@ -61,7 +75,7 @@ class FoodReportViewModel extends ChangeNotifier {
     _setLoading(true);
     try {
       await _repository.bulkInsertBySessionId(
-         sessionId,
+        sessionId,
         sessionReportId,
       );
       await fetchAll(); // Optional refresh

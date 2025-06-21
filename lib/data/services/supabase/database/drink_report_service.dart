@@ -8,7 +8,7 @@ class DrinkReportService {
 
   Future<List<DrinkReportModel>> getAllDrinkReports() async {
     try {
-      final response = await supabase.from(tableName).select('*');
+      final response = await supabase.from(tableName).select('*, drink(*)');
       return (response as List).map((e) => DrinkReportModel.fromJson(e)).toList();
     } catch (e) {
       debugPrint('Error fetching drink reports: $e');

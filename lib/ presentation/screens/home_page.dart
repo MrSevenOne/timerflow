@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:timerflow/%20presentation/screens/drink_page.dart';
-import 'package:timerflow/%20presentation/screens/foods_page.dart';
+import 'package:get/get.dart';
+import 'package:timerflow/%20presentation/screens/bar/bar_page.dart';
+import 'package:timerflow/%20presentation/screens/reports/reports_page.dart';
 import 'package:timerflow/%20presentation/screens/tables_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,8 +16,8 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _pages = [
     TablePage(),
-    DrinkPage(),
-    FoodPage(),
+    BarPage(),
+    ReportsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -32,18 +33,18 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        items: const [
+        items:  [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: "Tables",
+            label: 'home'.tr,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: "Orders",
+            icon: Icon(Icons.shopping_bag),
+            label: "bar".tr,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: "Settings",
+            icon: Icon(Icons.history),
+            label: "reports".tr,
           ),
         ],
       ),

@@ -8,13 +8,27 @@ class FoodReportService {
 
   Future<List<FoodReportModel>> getAllFoodReports() async {
     try {
-      final response = await supabase.from(tableName).select('*');
+      final response = await supabase.from(tableName).select('*,food(*)');
       return (response as List).map((e) => FoodReportModel.fromJson(e)).toList();
     } catch (e) {
       debugPrint('Error fetching food reports: $e');
       rethrow;
     }
   }
+  Future<List<FoodReportModel>> getFoodReportsBySessionReportId(int sessionReportId) async {
+  try {
+    final response = await supabase
+        .from(tableName)
+        .select('*, food(*)') // agar join kerak bo‘lsa
+        .eq('session_report_id', sessionReportId);
+
+    return (response as List).map((e) => FoodReportModel.fromJson(e)).toList();
+  } catch (e) {
+    debugPrint('Error fetching food reports by session_report_id: $e');
+    rethrow;
+  }
+}
+
 
   Future<void> addFoodReport(FoodReportModel report) async {
     try {

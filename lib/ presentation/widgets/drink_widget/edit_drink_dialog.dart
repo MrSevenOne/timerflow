@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
 import 'package:timerflow/domain/models/drink_model.dart';
@@ -42,11 +43,11 @@ class _EditDrinkDialogState extends State<EditDrinkDialog> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text('Ichimlikni tahrirlash', style: TextStyle(fontSize: 18)),
-          TextField(controller: nameController, decoration: const InputDecoration(labelText: 'Nomi')),
-          TextField(controller: priceController, decoration: const InputDecoration(labelText: 'Narxi'), keyboardType: TextInputType.number),
-          TextField(controller: volumeController, decoration: const InputDecoration(labelText: 'Hajmi (ml)'), keyboardType: TextInputType.number),
-          TextField(controller: amountController, decoration: const InputDecoration(labelText: 'Soni'), keyboardType: TextInputType.number),
+          Text('edit_drink'.tr, style: TextStyle(fontSize: 18)),
+          TextField(controller: nameController, decoration:  InputDecoration(labelText: 'title'.tr)),
+          TextField(controller: priceController, decoration:  InputDecoration(labelText: 'price'.tr), keyboardType: TextInputType.number),
+          TextField(controller: volumeController, decoration:  InputDecoration(labelText: 'size'.tr), keyboardType: TextInputType.number),
+          TextField(controller: amountController, decoration:  InputDecoration(labelText: 'amount'.tr), keyboardType: TextInputType.number),
           const SizedBox(height: 12),
           ElevatedButton(
             onPressed: () async {
@@ -60,7 +61,7 @@ class _EditDrinkDialogState extends State<EditDrinkDialog> {
               // ignore: use_build_context_synchronously
               Navigator.pop(context);
             },
-            child: const Text('Yangilash'),
+            child:  Text('update'.tr),
           ),
         ],
       ),

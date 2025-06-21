@@ -5,9 +5,17 @@ class FoodService {
   final _client = Supabase.instance.client;
   final String tableName = 'food';
 
-  // GET
+  // GET by user ID
   Future<List<FoodModel>> fetchFood() async {
-    final response = await _client.from(tableName).select().order('name');
+  final userId = _client.auth.currentUser?.id;
+    if (userId == null) throw Exception('User ID topilmadi');
+
+    final response = await _client
+        .from(tableName)
+        .select()
+        .eq('user_id', userId)
+        .order('name');
+
     return (response as List).map((e) => FoodModel.fromJson(e)).toList();
   }
 
@@ -24,7 +32,7 @@ class FoodService {
         .eq('id', foodModel.id!);
   }
 
-  
+  // Update amount after ordering
   Future<void> updateAmountFood({
     required int foodId,
     required int orderedQuantity,

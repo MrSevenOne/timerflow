@@ -5,7 +5,6 @@ import 'package:timerflow/%20presentation/providers/auth/auth_viewmodel.dart';
 import 'package:timerflow/%20presentation/screens/auth/login_page.dart';
 import 'package:timerflow/%20presentation/screens/home_page.dart';
 
-
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
@@ -14,18 +13,21 @@ class AuthGate extends StatelessWidget {
     final authProvider = Provider.of<AuthViewModel>(context, listen: false);
 
     return Scaffold(
-      body: StreamBuilder<AuthState>(
+      body: StreamBuilder<({AuthChangeEvent event, Session? session})>(
         stream: authProvider.authState,
         builder: (context, snapshot) {
+          // Loading indicator while stream connects
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final session = snapshot.data?.session;
+          final authState = snapshot.data;
+          final session = authState?.session;
+
           if (session != null) {
-            return HomePage();
+            return const HomePage();
           } else {
-            return LoginPage();
+            return const LoginPage();
           }
         },
       ),

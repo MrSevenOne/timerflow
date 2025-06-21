@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/auth/auth_viewmodel.dart';
 import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
 import 'package:timerflow/domain/models/drink_model.dart';
+import 'package:timerflow/utils/user/user_manager.dart';
 
 class AddDrinkDialog extends StatefulWidget {
   const AddDrinkDialog({super.key});
@@ -28,7 +29,6 @@ class _AddDrinkDialogState extends State<AddDrinkDialog> {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<DrinkViewModel>(context, listen: false);
-    final userId = context.read<AuthViewModel>().user?.id;
 
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -37,14 +37,15 @@ class _AddDrinkDialogState extends State<AddDrinkDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Ichimlik qo‘shish', style: TextStyle(fontSize: 18)),
-            TextFormField(controller: nameController, decoration: const InputDecoration(labelText: 'Nomi')),
-            TextFormField(controller: priceController, decoration: const InputDecoration(labelText: 'Narxi'), keyboardType: TextInputType.number),
-            TextFormField(controller: volumeController, decoration: const InputDecoration(labelText: 'Hajmi (ml)'), keyboardType: TextInputType.number),
-            TextFormField(controller: amountController, decoration: const InputDecoration(labelText: 'Soni'), keyboardType: TextInputType.number),
+            Text('drink_add'.tr, style: TextStyle(fontSize: 18)),
+            TextFormField(controller: nameController, decoration:  InputDecoration(labelText: 'title'.tr)),
+            TextFormField(controller: priceController, decoration:  InputDecoration(labelText: 'price'.tr), keyboardType: TextInputType.number),
+            TextFormField(controller: volumeController, decoration:  InputDecoration(labelText: 'size'.tr), keyboardType: TextInputType.number),
+            TextFormField(controller: amountController, decoration:  InputDecoration(labelText: 'amount'.tr), keyboardType: TextInputType.number),
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () async {
+                final userId = UserManager.currentUserId;
                 final model = DrinkModel(
                   name: nameController.text,
                   price: int.parse(priceController.text),
@@ -56,7 +57,7 @@ class _AddDrinkDialogState extends State<AddDrinkDialog> {
                 // ignore: use_build_context_synchronously
                 Navigator.pop(context);
               },
-              child: const Text('Qo‘shish'),
+              child:  Text('add'.tr),
             ),
           ],
         ),

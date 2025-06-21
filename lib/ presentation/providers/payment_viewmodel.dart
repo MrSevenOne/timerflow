@@ -6,6 +6,7 @@ class PaymentViewModel extends ChangeNotifier {
   final PaymentRepository _paymentRepository;
 
   PaymentReportModel? _payment;
+  List<PaymentReportModel> _payments = [];
   bool _isLoading = false;
   String? _error;
 
@@ -14,11 +15,25 @@ class PaymentViewModel extends ChangeNotifier {
   PaymentReportModel? get payment => _payment;
   bool get isLoading => _isLoading;
   String? get error => _error;
+  List<PaymentReportModel> get payments => _payments;
 
   // Public method to set loading from outside
   void setLoading(bool value) {
     _isLoading = value;
     notifyListeners();
+  }
+
+  // Get payment
+  Future<void> fetchPayments() async {
+    setLoading(true);
+    try {
+      _payments = await _paymentRepository.getAllPayments();
+      _error = null;
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      setLoading(false);
+    }
   }
 
   // Fetch payment by ID
@@ -46,7 +61,7 @@ class PaymentViewModel extends ChangeNotifier {
       return true; // ✅ muvaffaqiyatli bo‘lsa true qaytaradi
     } catch (e) {
       debugPrint('Error adding payment: $e');
-      return false; 
+      return false;
     } finally {
       _isLoading = false;
       notifyListeners();

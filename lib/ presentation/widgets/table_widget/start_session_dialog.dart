@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/tables_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/table/tables_viewmodel.dart';
+import 'package:timerflow/config/theme/ligth_theme.dart';
 import 'package:timerflow/domain/models/session_model.dart';
 import '../../../routers/app_routers.dart';
 import '../../providers/session/session_viewmodel.dart';
@@ -20,14 +22,15 @@ class StartSessionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return AlertDialog(
-      title: Text("Band qilish"),
+      title: Text("booking".tr),
       content:
-          Text('${sessionModel.tableModel?.name} nomli tableni band qilish'),
+          Text('${sessionModel.tableModel?.name} ${'busy_table'.tr}'),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text("bekor qilish"),
+          child: Text("cencal".tr,style: TextStyle(color: theme.colorScheme.error,),),
         ),
         TextButton(
           onPressed: () async {
@@ -55,7 +58,7 @@ class StartSessionDialog extends StatelessWidget {
               );
             }
           },
-          child: Text('tasdiqlash'),
+          child: Text('confirmation'.tr,style: TextStyle(color: mainColor),),
         ),
       ],
     );

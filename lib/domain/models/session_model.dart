@@ -6,12 +6,14 @@ class SessionModel {
   int table_id;
   DateTime start_time;
   TableModel? tableModel;
+  String? userId;
 
   SessionModel({
     this.id,
     required this.table_id,
     required this.start_time,
     this.tableModel,
+    required this.userId,
   });
 
   factory SessionModel.fromJson(Map<String, dynamic> json) {
@@ -19,9 +21,9 @@ class SessionModel {
       id: json['id'],
       table_id: json['table_id'],
       start_time: DateTime.parse(json['start_time']),
-      tableModel: json['tables'] != null
-          ? TableModel.fromJson(json['tables'])
-          : null,
+      tableModel:
+          json['tables'] != null ? TableModel.fromJson(json['tables']) : null,
+      userId: json['user_id'],
     );
   }
 
@@ -29,6 +31,7 @@ class SessionModel {
     return {
       'table_id': table_id,
       'start_time': start_time.toIso8601String(),
+      'user_id': userId,
     };
   }
 }

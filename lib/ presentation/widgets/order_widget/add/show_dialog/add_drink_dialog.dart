@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
 import 'package:timerflow/%20presentation/providers/order/order_viewmodel.dart';
@@ -46,8 +47,8 @@ class AddOrderDrinkDialog extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   OrderAddInfo(
-                      title: "Soni:", value: '${drinkModel.amount} dona'),
-                  OrderAddInfo(title: "Narxi:", value: '${drinkModel.price}'),
+                      title: "${'amount'.tr}:", value: '${drinkModel.amount} ${'piece'.tr}'),
+                  OrderAddInfo(title: "${'price'.tr}:", value: '${drinkModel.price}'),
                   QuantitySelector(
                     initialValue: selectedQuantity,
                     onChanged: (value) {
@@ -61,7 +62,7 @@ class AddOrderDrinkDialog extends StatelessWidget {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Cancel'),
+                  child:  Text('cencal'.tr),
                 ),
                 TextButton(
                   onPressed: () async {
@@ -81,7 +82,7 @@ class AddOrderDrinkDialog extends StatelessWidget {
                     // ignore: use_build_context_synchronously
                     Navigator.pop(context);
                   },
-                  child: const Text('Add'),
+                  child:  Text('add'.tr),
                 ),
               ],
             );

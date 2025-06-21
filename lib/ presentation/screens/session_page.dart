@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/order/order_viewmodel.dart';
-import 'package:timerflow/%20presentation/providers/session/session_report_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/session/table_report_viewmodel.dart';
 import 'package:timerflow/%20presentation/providers/session/session_viewmodel.dart';
 import 'package:timerflow/%20presentation/widgets/session_widget/session_completion.dart';
 import 'package:timerflow/%20presentation/widgets/session_widget/session_info.dart';
@@ -57,8 +58,12 @@ class _SessionPageState extends State<SessionPage> {
         }
 
         if (sessionViewModel.session == null) {
-          return const Scaffold(body: Center(child: Text('Session topilmadi')));
-        }
+          return  Scaffold(
+            body: Center(
+              child: Text('session_null'.tr),
+          ),
+        );
+      }
 
         final startTime = DateFormatter.formatWithMonth(
             date: sessionViewModel.session!.start_time);
@@ -78,20 +83,20 @@ class _SessionPageState extends State<SessionPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SessionInfoRow(title: 'Boshlangan vaqt:', value: startTime),
-                SessionInfoRow(title: 'O\'tgan vaqt:', value: elapsed),
+                SessionInfoRow(title: 'start_time'.tr, value: startTime),
+                SessionInfoRow(title: 'duration'.tr, value: elapsed),
                 SessionInfoRow(
-                    title: 'Stol narxi:', value: '$tablePrice so\'m'),
-                SessionInfoRow(title: 'Bar narxi:', value: '$orderPrice so\'m'),
-                SessionInfoRow(title: 'Jami narx:', value: '$totalPrice so\'m'),
+                    title: 'table_sum'.tr, value: '$tablePrice so\'m'),
+                SessionInfoRow(title: 'bar_sum'.tr, value: '$orderPrice so\'m'),
+                SessionInfoRow(title: 'total_sum'.tr, value: '$totalPrice so\'m'),
               ],
             ),
           ),
           bottomNavigationBar: Padding(
             padding: EdgeInsets.only(
                 bottom: AppConstant.padding * 2,
-                right: AppConstant.padding,
-                left: AppConstant.padding),
+                right: AppConstant.padding/2,
+                left: AppConstant.padding/2),
             child: Row(
               children: [
                 Expanded(
@@ -101,13 +106,19 @@ class _SessionPageState extends State<SessionPage> {
                       AppRoutes.order,
                       arguments: sessionViewModel.session?.id,
                     ),
-                    child: Text('buyurtmalar'),
+                    child: Text('order_title'.tr),
                   ),
                 ),
+                SizedBox(width: 10),
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () => SessionCompletionDialog.show(context: context, sessionViewModel: sessionViewModel, orderViewModel: orderViewModel, sessionReportViewModel: sessionReportViewModel,tableId: widget.tableId,),
-                    child: Text('yakunlash'),
+                    onPressed: () => SessionCompletionDialog.show(context: context, 
+                    sessionViewModel: sessionViewModel, 
+                    orderViewModel: orderViewModel, 
+                    sessionReportViewModel: sessionReportViewModel,
+                    tableId: widget.tableId,
+                    ),
+                    child: Text('completion'.tr),
                   ),
                 )
               ],

@@ -6,19 +6,28 @@ class AuthRepository {
 
   AuthRepository(this._authService);
 
-  Future<AuthResponse> signIn(String email, String password) {
+  /// SIGN IN
+  Future<AuthResponse?> signIn(String email, String password) {
     return _authService.signIn(email, password);
   }
 
-  Future<AuthResponse> signUp(String email, String password) {
+  /// SIGN UP
+  Future<AuthResponse?> signUp(String email, String password) {
     return _authService.signUp(email, password);
   }
 
-  Future<void> signOut() {
-    return _authService.signOut();
+  /// SIGN OUT (optionally use scope if needed)
+  Future<void> signOut({SignOutScope scope = SignOutScope.local}) {
+    return _authService.signOut(scope: scope);
   }
 
+  /// GET CURRENT USER
   User? getCurrentUser() {
     return _authService.getCurrentUser();
+  }
+
+  /// GET CURRENT SESSION
+  Session? getCurrentSession() {
+    return _authService.getCurrentSession();
   }
 }

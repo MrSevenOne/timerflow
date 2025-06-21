@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
 import 'package:timerflow/%20presentation/widgets/drink_widget/add_drink_dialog.dart';
 import 'package:timerflow/%20presentation/widgets/drink_widget/drink_item.dart';
-
+import 'package:timerflow/config/constant/app_constant.dart';
 
 class DrinkPage extends StatefulWidget {
   const DrinkPage({super.key});
@@ -13,7 +14,7 @@ class DrinkPage extends StatefulWidget {
 }
 
 class _DrinkPageState extends State<DrinkPage> {
-   @override
+  @override
   void initState() {
     super.initState();
     // ViewModel dan stol ma'lumotlarini olish
@@ -25,52 +26,42 @@ class _DrinkPageState extends State<DrinkPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Ichimliklar ro‘yxati'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              AddDrinkDialog.show(context);
-            },
-          ),
-        ],
-      ),
-      body: Consumer<DrinkViewModel>(
-        builder: (context, viewModel, _) {
-          if (viewModel.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: Padding(
+        padding: EdgeInsets.symmetric(vertical: AppConstant.padding / 3),
+        child: Consumer<DrinkViewModel>(
+          builder: (context, viewModel, _) {
+            if (viewModel.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (viewModel.drinkList.isEmpty) {
+            if (viewModel.drinkList.isEmpty) {
+              return RefreshIndicator(
+                onRefresh: viewModel.getDrinks,
+                child: Center(child: Text('drink_empty'.tr)),
+              );
+            }
+
             return RefreshIndicator(
               onRefresh: viewModel.getDrinks,
-              child: ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                children: const [
-                  SizedBox(height: 200),
-                  Center(child: Text('Ichimliklar mavjud emas')),
-                ],
+              child: ListView.builder(
+                itemCount: viewModel.drinkList.length,
+                itemBuilder: (context, index) {
+                  final drink = viewModel.drinkList[index];
+                  return DrinkItem(
+                    drink: drink,
+                    onTap: () {
+                      // Edit yoki detail funksiyasi
+                    },
+                  );
+                },
               ),
             );
-          }
-
-          return RefreshIndicator(
-            onRefresh: viewModel.getDrinks,
-            child: ListView.builder(
-              itemCount: viewModel.drinkList.length,
-              itemBuilder: (context, index) {
-                final drink = viewModel.drinkList[index];
-                return DrinkItem(
-                  drink: drink,
-                  onTap: () {
-                    // Edit yoki detail funksiyasi
-                  },
-                );
-              },
-            ),
-          );
-        },
+          },
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+      AddDrinkDialog.show(context);
+      },child: Icon(Icons.add,),
       ),
     );
   }

@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timerflow/data/repositories/database/auth/auth_repository.dart';
+import 'package:timerflow/routers/app_routers.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final AuthRepository _authRepository;
 
-  AuthViewModel(this._authRepository);
-
+  AuthViewModel(this._authRepository) {
+    loadCurrentUser();
+  }
 
   final _supabase = Supabase.instance.client;
-  Stream<AuthState> get authState => _supabase.auth.onAuthStateChange;
-
+   get authState => _supabase.auth.onAuthStateChange;
 
   bool _isLoading = false;
   String? _error;
@@ -20,55 +22,76 @@ class AuthViewModel extends ChangeNotifier {
   String? get error => _error;
   User? get user => _user;
 
-  Future<void> signIn(String email, String password) async {
-    _isLoading = true;
-    _error = null;
+  void _setLoading(bool value) {
+    _isLoading = value;
     notifyListeners();
+  }
+
+  void _setError(String? value) {
+    _error = value;
+    notifyListeners();
+  }
+
+  void _setUser(User? value) {
+    _user = value;
+    notifyListeners();
+  }
+
+  /// SIGN IN
+  Future<void> signIn(String email, String password) async {
+    _setLoading(true);
+    _setError(null);
 
     try {
       final response = await _authRepository.signIn(email, password);
-      _user = response.user;
+      _setUser(response?.user);
     } catch (e) {
-      _error = e.toString();
+      _setError("error_login".tr);
+      debugPrint("SignIn Error: $e");
     }
 
-    _isLoading = false;
-    notifyListeners();
+    _setLoading(false);
   }
 
+  /// SIGN UP
   Future<void> signUp(String email, String password) async {
-    _isLoading = true;
-    _error = null;
-    notifyListeners();
+    _setLoading(true);
+    _setError(null);
 
     try {
       final response = await _authRepository.signUp(email, password);
-      _user = response.user;
+      if (response?.user == null) {
+        _setError("Email already registered or confirmation required.");
+      } else {
+        _setUser(response?.user);
+      }
     } catch (e) {
-      _error = e.toString();
+      _setError("error_signup".tr);
+      debugPrint("SignUp Error: $e");
     }
 
-    _isLoading = false;
-    notifyListeners();
+    _setLoading(false);
   }
 
-  Future<void> signOut() async {
-    _isLoading = true;
-    notifyListeners();
+  /// SIGN OUT
+  Future<void> signOut(BuildContext context) async {
+  _setLoading(true);
+  try {
+    await _authRepository.signOut();
+    _setUser(null);
 
-    try {
-      await _authRepository.signOut();
-      _user = null;
-    } catch (e) {
-      _error = e.toString();
+    if (context.mounted) {
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.login, (route) => false);
     }
-
-    _isLoading = false;
-    notifyListeners();
+  } catch (e) {
+    _setError("Sign out failed: $e");
   }
+  _setLoading(false);
+}
 
+
+  /// LOAD CURRENT USER (on app start)
   void loadCurrentUser() {
-    _user = _authRepository.getCurrentUser();
-    notifyListeners();
+    _setUser(_authRepository.getCurrentUser());
   }
 }

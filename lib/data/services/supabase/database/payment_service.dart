@@ -9,7 +9,7 @@ class PaymentService {
   // Barcha paymentlarni olish
   Future<List<PaymentReportModel>> getAllPayments() async {
     try {
-      final response = await supabase.from(tableName).select();
+      final response = await supabase.from(tableName).select('*,tables(*)');
 
       debugPrint('Payments fetched: $response');
       return (response as List<dynamic>)

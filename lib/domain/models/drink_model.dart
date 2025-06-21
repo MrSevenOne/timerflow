@@ -1,3 +1,5 @@
+import 'package:timerflow/utils/formatter/number_formatted.dart';
+
 class DrinkModel {
   final int? id;
   final String name;
@@ -14,7 +16,7 @@ class DrinkModel {
     required this.amount,
     required this.userId,
   });
-
+  String get formattedPrice => '${NumberFormatter.price(price)} so\'m';
   factory DrinkModel.fromJson(Map<String, dynamic> json) {
     return DrinkModel(
       id: json['id'],
@@ -50,7 +52,7 @@ class DrinkModel {
       price: price ?? this.price,
       volume: volume ?? this.volume,
       amount: amount ?? this.amount,
-      userId:  userId ?? this.userId,
+      userId: userId ?? this.userId,
     );
   }
 }

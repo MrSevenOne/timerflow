@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timerflow/%20presentation/providers/auth/auth_viewmodel.dart';
@@ -9,10 +11,12 @@ import 'package:timerflow/%20presentation/providers/order/order_viewmodel.dart';
 import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
 import 'package:timerflow/%20presentation/providers/food/food_viewmodel.dart';
 import 'package:timerflow/%20presentation/providers/payment_viewmodel.dart';
-import 'package:timerflow/%20presentation/providers/session/session_report_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/session/table_report_viewmodel.dart';
 import 'package:timerflow/%20presentation/providers/session/session_viewmodel.dart';
 import 'package:timerflow/config/constant/api_constant.dart';
-import 'package:timerflow/%20presentation/providers/tables_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/table/tables_viewmodel.dart';
+import 'package:timerflow/config/localization/translations.dart';
+import 'package:timerflow/config/theme/ligth_theme.dart';
 import 'package:timerflow/data/repositories/database/auth/auth_repository.dart';
 import 'package:timerflow/data/repositories/database/auth/user_repository.dart';
 import 'package:timerflow/data/repositories/database/drink_report_repository.dart';
@@ -21,7 +25,7 @@ import 'package:timerflow/data/repositories/database/food_report_repository.dart
 import 'package:timerflow/data/repositories/database/food_repository.dart';
 import 'package:timerflow/data/repositories/database/order_repository.dart';
 import 'package:timerflow/data/repositories/database/payment_repository.dart';
-import 'package:timerflow/data/repositories/database/session_report_repository.dart';
+import 'package:timerflow/data/repositories/database/table_report_repository.dart';
 import 'package:timerflow/data/repositories/database/session_repository.dart';
 import 'package:timerflow/data/repositories/database/tables_repository.dart';
 import 'package:timerflow/data/services/supabase/database/auth/auth_service.dart';
@@ -32,9 +36,10 @@ import 'package:timerflow/data/services/supabase/database/food_report_service.da
 import 'package:timerflow/data/services/supabase/database/food_service.dart';
 import 'package:timerflow/data/services/supabase/database/order_service.dart';
 import 'package:timerflow/data/services/supabase/database/payment_service.dart';
-import 'package:timerflow/data/services/supabase/database/session_report_service.dart';
+import 'package:timerflow/data/services/supabase/database/table_report_service.dart';
 import 'package:timerflow/data/services/supabase/database/session_service.dart';
 import 'package:timerflow/routers/app_routers.dart';
+import 'package:timerflow/utils/user/user_manager.dart';
 
 import 'data/services/supabase/database/tables_service.dart';
 
@@ -46,7 +51,12 @@ void main() async {
     anonKey: ApiConstant.supabaseAnonKey,
   );
 
-  runApp(const MyApp());
+
+  runApp(
+    ScreenUtilInit(
+      child: const MyApp(),
+  ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -83,14 +93,15 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(create: (_) => UserViewmodel(UserRepository(UserService(),),),),
       ],
-      child: MaterialApp(
-        title: 'TimerFlow',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-           initialRoute: AppRoutes.authGate,
+      child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+          translations: AppTranslations(),
+      locale: const Locale('uz', 'UZ'),
+      fallbackLocale: const Locale('en', 'US'),
+        theme: lightTheme,
+           initialRoute: AppRoutes.signUp,
             routes: AppRoutes.routes,
-            onGenerateRoute: AppRoutes.onGenerateRoute, // bu yerda o'zingizning start page bo'lishi mumkin
+            onGenerateRoute: AppRoutes.onGenerateRoute,
       ),
     );
   }

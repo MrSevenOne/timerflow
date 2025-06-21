@@ -12,6 +12,9 @@ class FoodReportRepository {
 
   Future<void> deleteFoodReport({required int id}) async =>
       await service.deleteFoodReport(id);
-  Future<void> bulkInsertBySessionId(int sessionId,sessionReportId) async =>
+  Future<void> bulkInsertBySessionId(int sessionId, sessionReportId) async =>
       await service.bulkInsertBySessionId(sessionId, sessionReportId);
+
+  Future<List<FoodReportModel>> getFoodReportsBySessionReportId(int sessionReportId) async =>
+      await service.getFoodReportsBySessionReportId(sessionReportId);
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
 import 'package:timerflow/%20presentation/widgets/drink_widget/drink_item.dart';
@@ -28,7 +29,7 @@ class _DrinkTabState extends State<DrinkTab> {
         if (drinkViewModel.isLoading) {
           return const Center(child: Text('loading...'));
         } else if (drinkViewModel.drinkList.isEmpty) {
-          return const Center(child: Text('Ichimliklar mavjud emas'));
+          return  Center(child: Text('drink_empty'.tr));
         }
         return ListView.builder(
           itemCount: drinkViewModel.drinkList.length,

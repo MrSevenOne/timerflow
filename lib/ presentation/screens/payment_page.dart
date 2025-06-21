@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/session/session_report_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/session/table_report_viewmodel.dart';
 import 'package:timerflow/%20presentation/widgets/session_widget/session_info.dart';
 import 'package:timerflow/config/constant/app_constant.dart';
 
@@ -36,7 +37,7 @@ class _PaymentPageState extends State<PaymentPage> {
         if (report == null) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("Payment Page"),
+              title: Text("payment_title".tr),
             ),
             body: Center(
               child: CircularProgressIndicator(),
@@ -47,7 +48,7 @@ class _PaymentPageState extends State<PaymentPage> {
         // Display session info once the report is available
         return Scaffold(
           appBar: AppBar(
-            title: Text("Payment Page"),
+            title: Text("payment_title".tr),
           ),
           body: Padding(
             padding: EdgeInsets.all(AppConstant.padding),
@@ -55,13 +56,13 @@ class _PaymentPageState extends State<PaymentPage> {
               children: [
               
                     SessionInfoRow(
-                    title: 'Duration', value: report.duration),
+                    title: 'duration'.tr, value: report.duration),
                     SessionInfoRow(
-                    title: 'Table Price', value: '${report.tableId}'),
+                    title: 'table_price'.tr, value: '${report.tableId}'),
                     SessionInfoRow(
-                    title: 'Order Price', value: '${report.orderPrice}'),
+                    title: 'order_price'.tr, value: '${report.orderPrice}'),
                     SessionInfoRow(
-                    title: 'Total Price', value: '${report.orderPrice+ report.tablePrice}')
+                    title: 'total_sum'.tr, value: '${report.orderPrice+ report.tablePrice}')
                     
 
               ],

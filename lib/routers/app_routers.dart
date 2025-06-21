@@ -8,6 +8,9 @@ import 'package:timerflow/%20presentation/screens/order_page.dart';
 import 'package:timerflow/%20presentation/screens/drink_page.dart';
 import 'package:timerflow/%20presentation/screens/foods_page.dart';
 import 'package:timerflow/%20presentation/screens/payment_page.dart';
+import 'package:timerflow/%20presentation/screens/reports/bar_report.dart';
+import 'package:timerflow/%20presentation/screens/reports/payment_report.dart';
+import 'package:timerflow/%20presentation/screens/reports/table_report.dart';
 import 'package:timerflow/%20presentation/screens/session_page.dart';
 import 'package:timerflow/%20presentation/screens/tables_page.dart';
 
@@ -23,6 +26,9 @@ class AppRoutes {
   static const String login = '/LoginPage';
   static const String signUp = '/SignUp';
   static const String authGate = '/AuthGate';
+  static const String tableReport = '/TableReportPage';
+  static const String barReport = '/BarReportPage';
+  static const String paymentreport = '/Paymentreport';
 
   static Map<String, WidgetBuilder> routes = {
     home: (context) => HomePage(),
@@ -31,7 +37,10 @@ class AppRoutes {
     drinks: (context) => const DrinkPage(),
     login: (context) => LoginPage(),
     signUp: (context) => SignupPage(),
-    authGate: (context)=> AuthGate(),
+    authGate: (context) => AuthGate(),
+    tableReport: (context) => TableReportPage(),
+    barReport: (context) => BarReportPage(),
+    paymentreport: (context) => PaymentReport(),
   };
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {

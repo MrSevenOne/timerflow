@@ -6,7 +6,6 @@ class TableViewModel extends ChangeNotifier {
   final TableRepository _tableRepository;
 
   TableViewModel(this._tableRepository);
-  
 
   List<TableModel> _tables = [];
   bool _isLoading = false;
@@ -21,7 +20,6 @@ class TableViewModel extends ChangeNotifier {
     _setLoading(true);
     try {
       _tables = await _tableRepository.getAllTables();
-      debugPrint('Table qoshildi');
       _error = null;
     } catch (e) {
       _error = e.toString();
@@ -34,9 +32,11 @@ class TableViewModel extends ChangeNotifier {
   Future<void> addTable(TableModel table) async {
     try {
       await _tableRepository.createTable(table);
+      debugPrint('Table qoshildi');
       await fetchTables();
     } catch (e) {
       _error = e.toString();
+      debugPrint('Error Add Table: $e');
       notifyListeners();
     }
   }
@@ -65,7 +65,7 @@ class TableViewModel extends ChangeNotifier {
   }
 
   // Change status
-  Future<void> updateStatus(int tableId,status) async {
+  Future<void> updateStatus(int tableId, status) async {
     try {
       await _tableRepository.changeTableStatus(
           tableId: tableId, status: status);

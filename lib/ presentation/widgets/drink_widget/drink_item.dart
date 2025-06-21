@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:get/get_utils/get_utils.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:timerflow/%20presentation/widgets/drink_widget/delete_drink_dialog.dart';
 import 'package:timerflow/%20presentation/widgets/drink_widget/edit_drink_dialog.dart';
 import 'package:timerflow/domain/models/drink_model.dart';
@@ -16,6 +18,7 @@ class DrinkItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Slidable(
       key: ValueKey(drink.id),
       endActionPane: ActionPane(
@@ -38,9 +41,20 @@ class DrinkItem extends StatelessWidget {
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         child: ListTile(
-          title: Text(drink.name),
+          title: Text(
+            drink.name,
+            style: GoogleFonts.pridi(
+              textStyle: theme.textTheme.titleLarge,
+            ),
+          ),
           subtitle: Text(
-              'Narx: ${drink.price} so‘m | Hajmi: ${drink.volume} ml | Mavjud: ${drink.amount} dona'),
+            '${'price'.tr}: ${drink.price} so‘m | ${'volume'.tr}: ${drink.volume} ml',
+            style: theme.textTheme.labelMedium,
+          ),
+          trailing: Text(
+            '${'amount'.tr}: ${drink.amount}',
+            style: theme.textTheme.labelMedium,
+          ),
           onTap: onTap,
         ),
       ),

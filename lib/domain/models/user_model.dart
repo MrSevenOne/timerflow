@@ -5,7 +5,8 @@ class UserModel {
   final String username;
   final String email;
   final String password;
-  final bool status;
+  final int? subscriptionId;
+  final String status;
 
   UserModel({
     this.id,
@@ -14,35 +15,40 @@ class UserModel {
     required this.username,
     required this.email,
     required this.password,
+    this.subscriptionId,
     required this.status,
   });
 
-  // From JSON
+  // 🔁 FROM JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'],
+      id: json['id'] as int?,
       createTime: json['created_at'] != null
           ? DateTime.parse(json['created_at'])
           : null,
-      authId: json['auth_id'],
-      username: json['username'],
-      email: json['email'],
-      password: json['password'],
-      status: json['status'],
+      authId: json['auth_id'] as String?,
+      username: json['username'] ?? '',
+      email: json['email'] ?? '',
+      password: json['password'] ?? '',
+      subscriptionId: json['subscription_id'] as int?,
+      status: json['status'] ?? '',
     );
   }
 
-  // To JSON
+  // 🔁 TO JSON
   Map<String, dynamic> toJson() {
     return {
+      if (id != null) 'id': id,
+      if (authId != null) 'auth_id': authId,
       'username': username,
       'email': email,
       'password': password,
+      if (subscriptionId != null) 'subscription_id': subscriptionId,
       'status': status,
     };
   }
 
-  // CopyWith
+  // 📄 COPYWITH
   UserModel copyWith({
     int? id,
     DateTime? createTime,
@@ -50,7 +56,8 @@ class UserModel {
     String? username,
     String? email,
     String? password,
-    bool? status,
+    int? subscriptionId,
+    String? status,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -59,6 +66,7 @@ class UserModel {
       username: username ?? this.username,
       email: email ?? this.email,
       password: password ?? this.password,
+      subscriptionId: subscriptionId ?? this.subscriptionId,
       status: status ?? this.status,
     );
   }

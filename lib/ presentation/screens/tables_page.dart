@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/tables_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/table/tables_viewmodel.dart';
+import 'package:timerflow/%20presentation/widgets/drawer/drawer.dart';
 import 'package:timerflow/%20presentation/widgets/table_widget/add_table_dialog.dart';
 import 'package:timerflow/%20presentation/widgets/table_widget/items.dart';
 import 'package:timerflow/%20presentation/widgets/table_widget/start_session_dialog.dart';
 import 'package:timerflow/domain/models/session_model.dart';
 import 'package:timerflow/routers/app_routers.dart';
+import 'package:timerflow/utils/user/user_manager.dart';
 
 class TablePage extends StatefulWidget {
   const TablePage({super.key});
@@ -26,9 +29,11 @@ class _TablePageState extends State<TablePage> {
 
   @override
   Widget build(BuildContext context) {
+    final userId = UserManager.currentUserId;
     return Scaffold(
+      drawer: AppDrawer(),
       appBar: AppBar(
-        title: const Text('Stollar'),
+        title:  Text('table_title'.tr),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -45,7 +50,7 @@ class _TablePageState extends State<TablePage> {
             child: viewModel.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : viewModel.tables.isEmpty
-                    ? const Center(child: Text('Hozircha stol mavjud emas.'))
+                    ?  Center(child: Text('table_page_empty'.tr))
                     : ListView.builder(
                         itemCount: viewModel.tables.length,
                         itemBuilder: (context, index) {
@@ -56,8 +61,8 @@ class _TablePageState extends State<TablePage> {
                               final sessionModel = SessionModel(
                                 table_id: table.id!,
                                 start_time: DateTime.now(),
-                                tableModel:
-                                    table, // <<== mana bu qator qo‘shiladi
+                                tableModel: table,
+                                userId: userId,
                               );
 
                               if (table.status == 0) {

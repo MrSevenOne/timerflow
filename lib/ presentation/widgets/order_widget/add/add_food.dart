@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/food/food_viewmodel.dart';
 import 'package:timerflow/%20presentation/widgets/food_widget/food_item.dart';
@@ -32,7 +33,7 @@ class _FoodTabState extends State<FoodTab> {
           return Center(child: Text('loading....'));
         } else if (foodViewModel.foodList.isEmpty) {
           return Center(
-            child: Text('Food mavjud emas'),
+            child: Text('food_empty'.tr),
           );
         }
         return ListView.builder(

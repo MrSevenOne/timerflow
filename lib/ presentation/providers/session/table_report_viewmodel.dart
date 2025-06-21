@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:timerflow/data/repositories/database/session_report_repository.dart';
+import 'package:timerflow/data/repositories/database/table_report_repository.dart';
 import 'package:timerflow/domain/models/session_report_model.dart';
 
 class SessionReportViewModel extends ChangeNotifier {
@@ -10,11 +10,13 @@ class SessionReportViewModel extends ChangeNotifier {
   // ignore: non_constant_identifier_names
   List<SessionReportModel> _session_reports = [];
   SessionReportModel? _sessionbyId;
+  List<SessionReportModel> _sessionByTableId = [];
   bool _isLoading = false;
   String? _error;
 
   List<SessionReportModel> get sessionReports => _session_reports;
   SessionReportModel? get sessionbyId => _sessionbyId;
+  List<SessionReportModel> get sessionByTableId => _sessionByTableId;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
@@ -26,6 +28,18 @@ class SessionReportViewModel extends ChangeNotifier {
     } catch (e) {
       _error = e.toString();
       _session_reports = [];
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  Future<void> getReportByTableID(int tableId) async {
+    _setLoading(true);
+    try {
+      _sessionByTableId = await _repository.getReportByTableId(tableId);
+      _error = null;
+    } catch (e) {
+      _error = e.toString();
     } finally {
       _setLoading(false);
     }

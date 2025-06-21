@@ -9,7 +9,7 @@ class SessionReportService {
   ///Get All Session Report
   Future<List<SessionReportModel>> getAllSessionReports() async {
     try {
-      final response = await supabase.from(tableName).select('*');
+      final response = await supabase.from(tableName).select('*,tables(*)');
       return (response as List)
           .map((e) => SessionReportModel.fromJson(e))
           .toList();
@@ -35,6 +35,23 @@ class SessionReportService {
     return null;
   }
 }
+/// Get All Session Reports by Table ID
+Future<List<SessionReportModel>> getSessionReportsByTableId(int tableId) async {
+  try {
+    final response = await supabase
+        .from(tableName)
+        .select('*,tables(*)')
+        .eq('table_id', tableId);
+
+    return (response as List)
+        .map((e) => SessionReportModel.fromJson(e))
+        .toList();
+  } catch (error) {
+    debugPrint('Error fetching session reports by table ID: $error');
+    rethrow;
+  }
+}
+
 
 
   ///Add Session Report

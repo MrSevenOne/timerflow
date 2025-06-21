@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/drink/drink_report_viewmodel.dart';
 import 'package:timerflow/%20presentation/providers/food/food_report_viewmodel.dart';
 import 'package:timerflow/%20presentation/providers/order/order_viewmodel.dart';
 import 'package:timerflow/%20presentation/providers/payment_viewmodel.dart';
-import 'package:timerflow/%20presentation/providers/session/session_report_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/session/table_report_viewmodel.dart';
 import 'package:timerflow/%20presentation/providers/session/session_viewmodel.dart';
-import 'package:timerflow/%20presentation/providers/tables_viewmodel.dart';
+import 'package:timerflow/%20presentation/providers/table/tables_viewmodel.dart';
 import 'package:timerflow/config/constant/app_constant.dart';
 import 'package:timerflow/domain/models/payment_model.dart';
+import 'package:timerflow/utils/user/user_manager.dart';
 
 // ignore: must_be_immutable
 class PaymentBottomSheet extends StatefulWidget {
@@ -64,8 +66,8 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
-  String _paymentType = 'Naqt';
-  final List<String> _paymentOptions = ['Naqt', 'Click'];
+  String _paymentType = 'cash'.tr;
+  final List<String> _paymentOptions = ['cash'.tr, 'click'.tr];
 // Payment function
   Future<void> _handlePayment(BuildContext context) async {
     final orderViewModel = context.read<OrderViewModel>();
@@ -75,6 +77,8 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
     final foodReportViewModel = context.read<FoodReportViewModel>();
     final tableViewmodel = context.read<TableViewModel>();
     final sessionId = sessionViewModel.session?.id;
+    // User id olish uchun
+    final userId = UserManager.currentUserId!;
 
     final orderSum = orderViewModel.totalOrderPrice;
     final tableSum = sessionViewModel.tablePrice;
@@ -94,8 +98,11 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
         sessionReportId: sessionReportId,
         description: description,
         createTime: DateTime.now(),
+        userId: userId,
+        tableId: widget.tableId,
       );
       debugPrint("sessionReport id; $sessionReportId");
+      debugPrint("TABLE ID: ${widget.tableId}");
       final provider = Provider.of<PaymentViewModel>(context, listen: false);
 
       // Call insertBulkBySession after payment is added
@@ -119,7 +126,7 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            actions: [TextButton(onPressed: () {}, child: Text("ok"))],
+            actions: [TextButton(onPressed: () {}, child: Text("yes".tr))],
           );
         },
       );
@@ -137,7 +144,7 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text("To‘lov",
+                 Text("payment_title".tr,
                     style:
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 SizedBox(height: AppConstant.spacing),
@@ -145,14 +152,14 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
                   controller: _amountController,
                   keyboardType: TextInputType.number,
                   decoration:
-                      const InputDecoration(labelText: 'To‘lov miqdori'),
+                       InputDecoration(labelText: 'paymenting_sum'.tr),
                   validator: (value) =>
-                      value == null || value.isEmpty ? 'Miqdor kiriting' : null,
+                      value == null || value.isEmpty ? 'input_sum'.tr : null,
                 ),
                 SizedBox(height: AppConstant.spacing),
                 DropdownButtonFormField<String>(
                   value: _paymentType,
-                  decoration: const InputDecoration(labelText: 'To‘lov turi'),
+                  decoration:  InputDecoration(labelText: 'payment_type'.tr),
                   items: _paymentOptions.map((type) {
                     return DropdownMenuItem(value: type, child: Text(type));
                   }).toList(),
@@ -165,7 +172,7 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
                 SizedBox(height: AppConstant.spacing),
                 TextFormField(
                   controller: _descriptionController,
-                  decoration: const InputDecoration(labelText: 'Izoh'),
+                  decoration:  InputDecoration(labelText: 'description'.tr),
                   maxLines: 2,
                 ),
                 SizedBox(height: AppConstant.spacing * 2),
@@ -174,15 +181,15 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text("Bekor qilish"),
+                      child:  Text("cencal".tr),
                     ),
                     ElevatedButton(
                       onPressed: () async {
                         await _handlePayment(context);
                       },
                       child: paymentProvider.isLoading == true
-                          ? Text('loading')
-                          : Text("Tastiqlash"),
+                          ? Text('loading'.tr)
+                          : Text("confirmation".tr),
                     ),
                   ],
                 ),

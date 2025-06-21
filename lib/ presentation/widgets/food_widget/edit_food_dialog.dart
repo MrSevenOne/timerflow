@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/food/food_viewmodel.dart';
 import 'package:timerflow/domain/models/food_model.dart';
@@ -50,7 +51,7 @@ class _EditFoodDialogState extends State<EditFoodDialog> {
     final foodProvider = Provider.of<FoodViewModel>(context, listen: false);
 
     return AlertDialog(
-      title: const Text('Taomni tahrirlash'),
+      title:  Text('edit_food'.tr),
       content: Form(
         key: _formKey,
         child: Column(
@@ -58,19 +59,19 @@ class _EditFoodDialogState extends State<EditFoodDialog> {
           children: [
             TextFormField(
               controller: _nameController,
-              decoration: const InputDecoration(labelText: 'Nomi'),
-              validator: (value) => value == null || value.isEmpty ? 'Nomini kiriting' : null,
+              decoration:  InputDecoration(labelText: 'title'.tr),
+              validator: (value) => value == null || value.isEmpty ? 'input_title'.tr : null,
             ),
             TextFormField(
               controller: _priceController,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Narxi'),
-              validator: (value) => value == null || value.isEmpty ? 'Narxini kiriting' : null,
+              decoration:  InputDecoration(labelText: 'price'.tr),
+              validator: (value) => value == null || value.isEmpty ? 'input_table_price'.tr : null,
             ),
             TextFormField(
               controller: _amountController,
-              decoration: const InputDecoration(labelText: 'Kategoriya'),
-              validator: (value) => value == null || value.isEmpty ? 'Kategoriya kiriting' : null,
+              decoration:  InputDecoration(labelText: 'category'.tr),
+              validator: (value) => value == null || value.isEmpty ? 'input_category'.tr : null,
             ),
           ],
         ),
@@ -78,7 +79,7 @@ class _EditFoodDialogState extends State<EditFoodDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text("Bekor qilish"),
+          child:  Text("cencal".tr),
         ),
         ElevatedButton(
           onPressed: () async {
@@ -93,7 +94,7 @@ class _EditFoodDialogState extends State<EditFoodDialog> {
               Navigator.pop(context);
             }
           },
-          child: const Text('Saqlash'),
+          child:  Text('confirmation'.tr),
         ),
       ],
     );

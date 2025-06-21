@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:timerflow/%20presentation/widgets/order_widget/add/add_drink.dart';
 import 'package:timerflow/%20presentation/widgets/order_widget/add/add_food.dart';
 
@@ -12,11 +13,11 @@ class AddOrderPage extends StatelessWidget {
       length: 2, // Ikki tab, biri food, biri drink
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Buyurtma Qo‘shish'),
-          bottom: const TabBar(
+          title:  Text('order_add'.tr),
+          bottom:  TabBar(
             tabs: [
-              Tab(text: 'Ichimliklar'),
-              Tab(text: 'Ovqatlar'),
+              Tab(text: 'drink'.tr),
+              Tab(text: 'food'.tr),
             ],
           ),
         ),

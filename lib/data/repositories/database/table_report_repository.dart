@@ -1,4 +1,4 @@
-import 'package:timerflow/data/services/supabase/database/session_report_service.dart';
+import 'package:timerflow/data/services/supabase/database/table_report_service.dart';
 import 'package:timerflow/domain/models/session_report_model.dart';
 
 class SessionReportRepository {
@@ -8,6 +8,9 @@ class SessionReportRepository {
 // Get All Report
   Future<List<SessionReportModel>> getAllReports() async =>
       await _service.getAllSessionReports();
+//Get by Table ID
+  Future<List<SessionReportModel>> getReportByTableId(int tableId) async =>
+      await _service.getSessionReportsByTableId(tableId);
 
 // Add Session Report
   Future<void> addReport({required SessionReportModel model}) async =>
