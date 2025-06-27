@@ -89,7 +89,6 @@ class _SessionPageState extends State<SessionPage> {
                     title: 'table_sum'.tr, value: '$tablePrice so\'m'),
                 SessionInfoRow(title: 'bar_sum'.tr, value: '$orderPrice so\'m'),
                 SessionInfoRow(title: 'total_sum'.tr, value: '$totalPrice so\'m'),
-                SessionInfoRow(title: 'id', value: '${sessionViewModel.session!.id}')
               ],
             ),
           ),

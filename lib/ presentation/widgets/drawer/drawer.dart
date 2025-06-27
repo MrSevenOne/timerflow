@@ -69,19 +69,6 @@ class _AppDrawerState extends State<AppDrawer> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.info),
-                title:  Text("about_app".tr),
-                onTap: () {
-                  Navigator.pop(context); // Drawer yopilsin
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => EditProfilePage(userModel: user!),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
                 leading: const Icon(Icons.logout),
                 title:  Text("log_out".tr),
                 onTap: () {

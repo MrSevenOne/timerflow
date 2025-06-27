@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
+import 'package:timerflow/config/constant/app_constant.dart';
 import 'package:timerflow/domain/models/drink_model.dart';
 
 class EditDrinkDialog extends StatefulWidget {
@@ -42,6 +43,7 @@ class _EditDrinkDialogState extends State<EditDrinkDialog> {
       padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        spacing: AppConstant.spacing,
         children: [
           Text('edit_drink'.tr, style: TextStyle(fontSize: 18)),
           TextField(controller: nameController, decoration:  InputDecoration(labelText: 'title'.tr)),

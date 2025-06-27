@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/drink/drink_viewmodel.dart';
+import 'package:timerflow/config/constant/app_constant.dart';
 import 'package:timerflow/domain/models/drink_model.dart';
 import 'package:timerflow/utils/user/user_manager.dart';
 
@@ -36,6 +37,7 @@ class _AddDrinkDialogState extends State<AddDrinkDialog> {
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          spacing: AppConstant.spacing,
           children: [
             Text('drink_add'.tr, style: TextStyle(fontSize: 18)),
             TextFormField(controller: nameController, decoration:  InputDecoration(labelText: 'title'.tr)),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/food/food_viewmodel.dart';
+import 'package:timerflow/config/constant/app_constant.dart';
 import 'package:timerflow/domain/models/food_model.dart';
 
 class EditFoodDialog extends StatefulWidget {
@@ -56,6 +57,7 @@ class _EditFoodDialogState extends State<EditFoodDialog> {
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          spacing: AppConstant.spacing,
           children: [
             TextFormField(
               controller: _nameController,
