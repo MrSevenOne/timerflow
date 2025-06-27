@@ -22,7 +22,7 @@ class _PaymentPageState extends State<PaymentPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // Ensure that the report is fetched
       await Provider.of<SessionReportViewModel>(context, listen: false)
-          .getSessionReportBySessionId(widget.sessionId);
+          .getSessionReportByUserId();
     });
   }
 

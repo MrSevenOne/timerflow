@@ -29,8 +29,8 @@ class _BarReportPageState extends State<BarReportPage>
     final foodVM = Provider.of<FoodReportViewModel>(context, listen: false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      drinkVM.fetchAll();
-      foodVM.fetchAll();
+      drinkVM.fetchByUserId();
+      foodVM.fetchByUserReportId();
     });
 
     _tabController = TabController(length: 2, vsync: this);

@@ -15,54 +15,14 @@ class FoodReportViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  Future<void> fetchAll() async {
+  Future<void> fetchByUserReportId() async {
     _setLoading(true);
     try {
-      _reports = await _repository.getAllFoodReport();
+      _reports = await _repository.getFoodReportsByUserReportId();
       _error = null;
     } catch (e) {
       _error = e.toString();
       _reports = [];
-    } finally {
-      _setLoading(false);
-    }
-  }
-
-  Future<void> fetchBySessionReportId(int sessionReportId) async {
-    _setLoading(true);
-    try {
-      _reports =
-          await _repository.getFoodReportsBySessionReportId(sessionReportId);
-      _error = null;
-    } catch (e) {
-      _error = e.toString();
-      _reports = [];
-    } finally {
-      _setLoading(false);
-    }
-  }
-
-  Future<void> addReport(FoodReportModel model) async {
-    _setLoading(true);
-    try {
-      await _repository.addFoodReport(foodReport: model);
-      await fetchAll(); // Refresh after add
-      _error = null;
-    } catch (e) {
-      _error = e.toString();
-    } finally {
-      _setLoading(false);
-    }
-  }
-
-  Future<void> deleteReport(int id) async {
-    _setLoading(true);
-    try {
-      await _repository.deleteFoodReport(id: id);
-      await fetchAll(); // Refresh after delete
-      _error = null;
-    } catch (e) {
-      _error = e.toString();
     } finally {
       _setLoading(false);
     }
@@ -75,10 +35,7 @@ class FoodReportViewModel extends ChangeNotifier {
     _setLoading(true);
     try {
       await _repository.bulkInsertBySessionId(
-        sessionId,
-        sessionReportId,
-      );
-      await fetchAll(); // Optional refresh
+          sessionId: sessionId, sessionReportId: sessionReportId);
       _error = null;
     } catch (e) {
       _error = e.toString();

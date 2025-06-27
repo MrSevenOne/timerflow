@@ -13,12 +13,14 @@ class SessionReportRepository {
       await _service.getSessionReportsByTableId(tableId);
 
 // Add Session Report
-  Future<void> addReport({required SessionReportModel model}) async =>
-      await _service.addSessionReport(model);
+Future<int> addReport({required SessionReportModel model}) {
+  return _service.addReport(model);
+}
+
 
 // Get session By Table Id
-  Future getSessionReportBySessionId({required int sessionId}) async =>
-      _service.getSessionReportBySessionId(sessionId);
+  Future getSessionReportByUserId() async =>
+      _service.getSessionReportsByUserId();
 
 // Delete Session Report
   Future<void> deleteReport({required int id}) async =>

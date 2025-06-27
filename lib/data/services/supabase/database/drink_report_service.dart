@@ -1,44 +1,33 @@
-import 'package:flutter/foundation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:timerflow/domain/models/drink_report_model.dart';
+
+import '../../../../exports.dart';
 
 class DrinkReportService {
   final supabase = Supabase.instance.client;
   final String tableName = 'drink_report';
 
-  Future<List<DrinkReportModel>> getAllDrinkReports() async {
+  Future<List<DrinkReportModel>> getDrinkReportsByUserId() async {
     try {
-      final response = await supabase.from(tableName).select('*, drink(*)');
-      return (response as List).map((e) => DrinkReportModel.fromJson(e)).toList();
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) throw Exception('User not authenticated');
+
+      final response = await supabase
+          .from(tableName)
+          .select('*, drink(*)')
+          .eq('user_id', userId);
+
+      return (response as List)
+          .map((e) => DrinkReportModel.fromJson(e))
+          .toList();
     } catch (e) {
       debugPrint('Error fetching drink reports: $e');
       rethrow;
     }
   }
 
-  Future<void> addDrinkReport(DrinkReportModel report) async {
-    try {
-      await supabase.from(tableName).insert(report.toJson());
-      debugPrint('Drink report added successfully');
-    } catch (e) {
-      debugPrint('Error adding drink report: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> deleteDrinkReport(int id) async {
-    try {
-      await supabase.from(tableName).delete().eq('id', id);
-      debugPrint('Drink report deleted: $id');
-    } catch (e) {
-      debugPrint('Error deleting drink report: $e');
-      rethrow;
-    }
-  }
-
-  /// 🔁 Bulk insert all order_drink items by session ID into drink_report
   Future<void> bulkInsertBySessionId(int sessionId, int sessionReportId) async {
     try {
+      final authData = getUserIdAndTimestamp();
+
       final orders = await supabase
           .from('order_drinks')
           .select()
@@ -49,17 +38,18 @@ class DrinkReportService {
           'drink_id': order['drink_id'],
           'quantity': order['quantity'],
           'session_report_id': sessionReportId,
+          ...authData,
         };
       }).toList();
 
       if (reportData.isNotEmpty) {
         await supabase.from(tableName).insert(reportData);
-        debugPrint('Bulk drink reports inserted for session $sessionId');
+        debugPrint('✅ Bulk drink reports inserted for session $sessionId');
       } else {
-        debugPrint('No order_drink records found for session $sessionId');
+        debugPrint('ℹ️ No drink orders found for session $sessionId');
       }
     } catch (e) {
-      debugPrint('Error in bulk insert to drink_report: $e');
+      debugPrint('❌ Error inserting drink reports: $e');
       rethrow;
     }
   }

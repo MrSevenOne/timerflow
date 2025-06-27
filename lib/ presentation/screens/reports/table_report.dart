@@ -24,7 +24,7 @@ void initState() {
   final viewModel = context.read<SessionReportViewModel>();
   
   WidgetsBinding.instance.addPostFrameCallback((_) {
-    viewModel.fetchAllReports();
+    viewModel.getSessionReportByUserId();
   });
 }
 

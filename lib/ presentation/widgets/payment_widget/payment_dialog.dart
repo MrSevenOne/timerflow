@@ -1,28 +1,24 @@
-import 'package:flutter/material.dart';
-import 'package:get/get_utils/get_utils.dart';
-import 'package:provider/provider.dart';
-import 'package:timerflow/%20presentation/providers/drink/drink_report_viewmodel.dart';
-import 'package:timerflow/%20presentation/providers/food/food_report_viewmodel.dart';
-import 'package:timerflow/%20presentation/providers/order/order_viewmodel.dart';
-import 'package:timerflow/%20presentation/providers/payment_viewmodel.dart';
-import 'package:timerflow/%20presentation/providers/session/table_report_viewmodel.dart';
-import 'package:timerflow/%20presentation/providers/session/session_viewmodel.dart';
-import 'package:timerflow/%20presentation/providers/table/tables_viewmodel.dart';
-import 'package:timerflow/config/constant/app_constant.dart';
-import 'package:timerflow/domain/models/payment_model.dart';
-import 'package:timerflow/utils/user/user_manager.dart';
 
-// ignore: must_be_immutable
+
+import 'package:timerflow/exports.dart';
+
 class PaymentBottomSheet extends StatefulWidget {
-  int tableId;
-  PaymentBottomSheet({
+  final int tableId;
+  final int sessionReportId;
+  final int sessionId;
+
+  const PaymentBottomSheet({
     super.key,
     required this.tableId,
+    required this.sessionReportId,
+    required this.sessionId,
   });
 
   static Future<void> show({
     required BuildContext context,
     required int tableId,
+    required int sessionReportId,
+    required int sessionId,
   }) async {
     await showModalBottomSheet(
       context: context,
@@ -34,7 +30,11 @@ class PaymentBottomSheet extends StatefulWidget {
         padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        child: PaymentBottomSheet(tableId: tableId),
+        child: PaymentBottomSheet(
+          tableId: tableId,
+          sessionReportId: sessionReportId,
+          sessionId: sessionId,
+        ),
       ),
     );
   }
@@ -44,99 +44,85 @@ class PaymentBottomSheet extends StatefulWidget {
 }
 
 class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final sessionViewModel =
-          Provider.of<SessionViewModel>(context, listen: false);
-      final orderViewModel =
-          Provider.of<OrderViewModel>(context, listen: false);
-      final sessionReportProvider =
-          Provider.of<SessionReportViewModel>(context, listen: false);
-
-      final sessionId = sessionViewModel.session?.id;
-      await sessionReportProvider.getSessionReportBySessionId(sessionId!);
-      await orderViewModel.fetchDrinkOrdersBySessionId(sessionId);
-      await orderViewModel.fetchFoodOrdersBySessionId(sessionId);
-    });
-  }
-
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
   String _paymentType = 'cash'.tr;
   final List<String> _paymentOptions = ['cash'.tr, 'click'.tr];
-// Payment function
-  Future<void> _handlePayment(BuildContext context) async {
-    final orderViewModel = context.read<OrderViewModel>();
-    final sessionViewModel = context.read<SessionViewModel>();
-    final sessionReportViewModel = context.read<SessionReportViewModel>();
-    final drinkReportViewModel = context.read<DrinkReportViewModel>();
-    final foodReportViewModel = context.read<FoodReportViewModel>();
-    final tableViewmodel = context.read<TableViewModel>();
-    final sessionId = sessionViewModel.session?.id;
-    // User id olish uchun
-    final userId = UserManager.currentUserId!;
 
-    final orderSum = orderViewModel.totalOrderPrice;
-    final tableSum = sessionViewModel.tablePrice;
-    final sessionReportId = sessionReportViewModel.sessionbyId!.id!;
+  @override
+  void initState() {
+    super.initState();
 
-    if (_formKey.currentState!.validate()) {
-      final paymentSum = int.tryParse(_amountController.text.trim()) ?? 0;
-      final paymentType = _paymentType == 'Naqt' ? 1 : 2;
-      final description = _descriptionController.text.trim();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final orderViewModel = Provider.of<OrderViewModel>(context, listen: false);
+      await orderViewModel.fetchDrinkOrdersBySessionId(widget.sessionId);
+      await orderViewModel.fetchFoodOrdersBySessionId(widget.sessionId);
+    });
+  }
 
-      final paymentModel = PaymentReportModel(
-        paymentSum: paymentSum,
-        paymentType: paymentType,
-        orderSum: orderSum,
-        tableSum: tableSum,
-        totalSum: orderSum + tableSum,
-        sessionReportId: sessionReportId,
-        description: description,
-        createTime: DateTime.now(),
-        userId: userId,
-        tableId: widget.tableId,
-      );
-      debugPrint("sessionReport id; $sessionReportId");
-      debugPrint("TABLE ID: ${widget.tableId}");
-      final provider = Provider.of<PaymentViewModel>(context, listen: false);
+  Future<void> _handleCheckout(BuildContext context) async {
+  final orderViewModel = context.read<OrderViewModel>();
+  final sessionViewModel = context.read<SessionViewModel>();
+  final drinkReportViewModel = context.read<DrinkReportViewModel>();
+  final foodReportViewModel = context.read<FoodReportViewModel>();
+  final tableViewModel = context.read<TableViewModel>();
+  final checkoutViewModel = context.read<CheckoutViewModel>();
 
-      // Call insertBulkBySession after payment is added
-      await drinkReportViewModel.insertBulkBySession(
-        sessionId: sessionId!,
-        sessionReportId: sessionReportId,
-      );
-      await foodReportViewModel.insertBulkBySession(
-        sessionId: sessionId,
-        sessionReportId: sessionReportId,
-      );
-      await sessionViewModel.deleteSession(sessionId);
-      await tableViewmodel.updateStatus(widget.tableId, 0);
-      //payment
-      await provider.addPayment(paymentModel);
+  final userId = UserManager.currentUserId!;
+  final orderSum = orderViewModel.totalOrderPrice;
+  final tableSum = sessionViewModel.tablePrice;
 
-      // ignore: use_build_context_synchronously
-      Navigator.pop(context);
-      showDialog(
-        // ignore: use_build_context_synchronously
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            actions: [TextButton(onPressed: () {}, child: Text("yes".tr))],
-          );
-        },
+  if (_formKey.currentState!.validate()) {
+    final paymentSum = int.tryParse(_amountController.text.trim()) ?? 0;
+    final paymentType = _paymentType == 'cash'.tr ? 1 : 2;
+    final description = _descriptionController.text.trim();
+
+    final paymentModel = PaymentReportModel(
+      paymentSum: paymentSum,
+      paymentType: paymentType,
+      orderSum: orderSum,
+      tableSum: tableSum,
+      totalSum: orderSum + tableSum,
+      sessionReportId: widget.sessionReportId,
+      description: description,
+      createTime: DateTime.now(),
+      userId: userId,
+      tableId: widget.tableId,
+    );
+
+    final isSuccess = await checkoutViewModel.checkoutAll(
+      payment: paymentModel,
+      insertDrinkReports: () => drinkReportViewModel.insertBulkBySession(
+        sessionId: widget.sessionId,
+        sessionReportId: widget.sessionReportId,
+      ),
+      insertFoodReports: () => foodReportViewModel.insertBulkBySession(
+        sessionId: widget.sessionId,
+        sessionReportId: widget.sessionReportId,
+      ),
+      deleteSession: () => sessionViewModel.deleteSession(widget.sessionId),
+      freeTable: () => tableViewModel.updateStatus(widget.tableId, 0),
+    );
+
+    if (!context.mounted) return;
+
+    if (isSuccess) {
+      Navigator.pop(context); // close bottom sheet
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.home, (route) => false);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(checkoutViewModel.error ?? 'Xatolik yuz berdi')),
       );
     }
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PaymentViewModel>(
-      builder: (context, paymentProvider, _) {
+    return Consumer<CheckoutViewModel>(
+      builder: (context, checkoutProvider, _) {
         return Padding(
           padding: EdgeInsets.all(AppConstant.padding),
           child: Form(
@@ -144,22 +130,21 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                 Text("payment_title".tr,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                Text("payment_title".tr,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold)),
                 SizedBox(height: AppConstant.spacing),
                 TextFormField(
                   controller: _amountController,
                   keyboardType: TextInputType.number,
-                  decoration:
-                       InputDecoration(labelText: 'paymenting_sum'.tr),
+                  decoration: InputDecoration(labelText: 'paymenting_sum'.tr),
                   validator: (value) =>
                       value == null || value.isEmpty ? 'input_sum'.tr : null,
                 ),
                 SizedBox(height: AppConstant.spacing),
                 DropdownButtonFormField<String>(
                   value: _paymentType,
-                  decoration:  InputDecoration(labelText: 'payment_type'.tr),
+                  decoration: InputDecoration(labelText: 'payment_type'.tr),
                   items: _paymentOptions.map((type) {
                     return DropdownMenuItem(value: type, child: Text(type));
                   }).toList(),
@@ -172,7 +157,7 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
                 SizedBox(height: AppConstant.spacing),
                 TextFormField(
                   controller: _descriptionController,
-                  decoration:  InputDecoration(labelText: 'description'.tr),
+                  decoration: InputDecoration(labelText: 'description'.tr),
                   maxLines: 2,
                 ),
                 SizedBox(height: AppConstant.spacing * 2),
@@ -181,14 +166,14 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
                   children: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child:  Text("cencal".tr),
+                      child: Text("cencal".tr),
                     ),
                     ElevatedButton(
-                      onPressed: () async {
-                        await _handlePayment(context);
-                      },
-                      child: paymentProvider.isLoading == true
-                          ? Text('loading'.tr)
+                      onPressed: checkoutProvider.isLoading
+                          ? null
+                          : () async => await _handleCheckout(context),
+                      child: checkoutProvider.isLoading
+                          ? const CircularProgressIndicator()
                           : Text("confirmation".tr),
                     ),
                   ],

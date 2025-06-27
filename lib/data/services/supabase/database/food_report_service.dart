@@ -1,79 +1,57 @@
-import 'package:flutter/foundation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:timerflow/domain/models/food_report_model.dart';
+import 'package:timerflow/exports.dart';
 
 class FoodReportService {
   final supabase = Supabase.instance.client;
   final String tableName = 'food_report';
 
-  Future<List<FoodReportModel>> getAllFoodReports() async {
+
+  Future<List<FoodReportModel>> getFoodReportsByUserId() async {
     try {
-      final response = await supabase.from(tableName).select('*,food(*)');
-      return (response as List).map((e) => FoodReportModel.fromJson(e)).toList();
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) throw Exception('User not authenticated');
+
+      final response = await supabase
+          .from(tableName)
+          .select('*, food(*)')
+          .eq('user_id', userId);
+
+      return (response as List)
+          .map((e) => FoodReportModel.fromJson(e))
+          .toList();
     } catch (e) {
-      debugPrint('Error fetching food reports: $e');
-      rethrow;
-    }
-  }
-  Future<List<FoodReportModel>> getFoodReportsBySessionReportId(int sessionReportId) async {
-  try {
-    final response = await supabase
-        .from(tableName)
-        .select('*, food(*)') // agar join kerak bo‘lsa
-        .eq('session_report_id', sessionReportId);
-
-    return (response as List).map((e) => FoodReportModel.fromJson(e)).toList();
-  } catch (e) {
-    debugPrint('Error fetching food reports by session_report_id: $e');
-    rethrow;
-  }
-}
-
-
-  Future<void> addFoodReport(FoodReportModel report) async {
-    try {
-      await supabase.from(tableName).insert(report.toJson());
-      debugPrint('Food report added successfully');
-    } catch (e) {
-      debugPrint('Error adding food report: $e');
+      debugPrint('❌ Error fetching food reports by user: $e');
       rethrow;
     }
   }
 
-  Future<void> bulkInsertBySessionId(int sessionId, int sessionReportId) async {
-  try {
-    final orders = await supabase
-        .from('order_foods')
-        .select()
-        .eq('session_id', sessionId);
 
-    final List<Map<String, dynamic>> reportData = (orders as List).map((order) {
-      return {
-        'food_id': order['food_id'],
-        'quantity': order['quantity'],
-        'session_report_id': sessionReportId,
-      };
-    }).toList();
-
-    if (reportData.isNotEmpty) {
-      await supabase.from(tableName).insert(reportData);
-      debugPrint('Bulk food reports inserted for session $sessionId');
-    } else {
-      debugPrint('No order_food records found for session $sessionId');
-    }
-  } catch (e) {
-    debugPrint('Error in bulk insert to food_report: $e');
-    rethrow;
-  }
-}
-
-
-  Future<void> deleteFoodReport(int id) async {
+  Future<void> bulkInsertBySessionId({required int sessionId,required int sessionReportId}) async {
     try {
-      await supabase.from(tableName).delete().eq('id', id);
-      debugPrint('Food report deleted: $id');
+      final authData = getUserIdAndTimestamp();
+
+      final orders = await supabase
+          .from('order_foods')
+          .select()
+          .eq('session_id', sessionId);
+
+      final List<Map<String, dynamic>> reportData = (orders as List).map((order) {
+        return {
+          'food_id': order['food_id'],
+          'quantity': order['quantity'],
+          'session_report_id': sessionReportId,
+          ...authData,
+        };
+      }).toList();
+
+      if (reportData.isNotEmpty) {
+        await supabase.from(tableName).insert(reportData);
+        debugPrint('✅ Bulk food reports inserted for session $sessionId');
+      } else {
+        debugPrint('ℹ️ No food orders found for session $sessionId');
+      }
     } catch (e) {
-      debugPrint('Error deleting food report: $e');
+      debugPrint('❌ Error inserting food reports: $e');
       rethrow;
     }
   }

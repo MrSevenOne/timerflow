@@ -6,10 +6,10 @@ class SessionReportService {
   final supabase = Supabase.instance.client;
   final String tableName = 'session_report';
 
-  ///Get All Session Report
+  /// 🔽 Get All Session Reports
   Future<List<SessionReportModel>> getAllSessionReports() async {
     try {
-      final response = await supabase.from(tableName).select('*,tables(*)');
+      final response = await supabase.from(tableName).select('*, tables(*)');
       return (response as List)
           .map((e) => SessionReportModel.fromJson(e))
           .toList();
@@ -19,56 +19,65 @@ class SessionReportService {
     }
   }
 
-  /// Get Session Report by Session ID
- Future<SessionReportModel?> getSessionReportBySessionId(int sessionId) async {
+  /// 🔽 Get Session Reports by Authenticated User
+  Future<List<SessionReportModel>> getSessionReportsByUserId() async {
+    try {
+      final userId = Supabase.instance.client.auth.currentUser?.id;
+      if (userId == null) {
+        throw Exception('User not authenticated');
+      }
+
+      final response = await supabase
+          .from(tableName)
+          .select('*, tables(*)')
+          .eq('user_id', userId);
+
+      return (response as List)
+          .map((e) => SessionReportModel.fromJson(e))
+          .toList();
+    } catch (error) {
+      debugPrint('Error fetching session reports by user ID: $error');
+      rethrow;
+    }
+  }
+
+  /// 🔽 Get All Session Reports by Table ID
+  Future<List<SessionReportModel>> getSessionReportsByTableId(int tableId) async {
+    try {
+      final response = await supabase
+          .from(tableName)
+          .select('*, tables(*)')
+          .eq('table_id', tableId);
+
+      return (response as List)
+          .map((e) => SessionReportModel.fromJson(e))
+          .toList();
+    } catch (error) {
+      debugPrint('Error fetching session reports by table ID: $error');
+      rethrow;
+    }
+  }
+
+  /// ➕ Add or Update Session Report
+ Future<int> addReport(SessionReportModel model) async {
   try {
     final response = await supabase
-        .from(tableName)
-        .select('*,tables(*)')
-        .eq('session_id', sessionId)
-        .limit(1)
-        .single(); // gets exactly one result, or throws
+        .from('session_report')
+        .insert(model.toJson())
+        .select()
+        .single(); // bu qo‘shilgan rowni qaytaradi
 
-    return SessionReportModel.fromJson(response);
-  } catch (error) {
-    debugPrint('Error fetching getSessionReportBySessionId: $error');
-    return null;
-  }
-}
-/// Get All Session Reports by Table ID
-Future<List<SessionReportModel>> getSessionReportsByTableId(int tableId) async {
-  try {
-    final response = await supabase
-        .from(tableName)
-        .select('*,tables(*)')
-        .eq('table_id', tableId);
-
-    return (response as List)
-        .map((e) => SessionReportModel.fromJson(e))
-        .toList();
-  } catch (error) {
-    debugPrint('Error fetching session reports by table ID: $error');
-    rethrow;
-  }
-}
-
-
-
-  ///Add Session Report
- /// Add or Update Session Report by session_id
-Future<void> addSessionReport(SessionReportModel report) async {
-  try {
-    await supabase.from(tableName)
-        .upsert(report.toJson(), onConflict: 'session_id');
-    debugPrint('Session report added or updated successfully');
+    final insertedId = response['id'] as int;
+    debugPrint("✅ Session report inserted with ID: $insertedId");
+    return insertedId;
   } catch (e) {
-    debugPrint('Error adding or updating session report: $e');
+    debugPrint("❌ Error inserting session report: $e");
     rethrow;
   }
 }
 
 
-  /// Delete Session Report
+  /// 🗑 Delete Session Report
   Future<void> deleteSessionReport(int id) async {
     try {
       await supabase.from(tableName).delete().eq('id', id);

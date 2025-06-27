@@ -1,5 +1,15 @@
 const Map<String, String> uzUz = {
   'appName': 'TimeFlow',
+  'language':"Til",
+  'settings':'Sozlamalar',
+  'theme_mode': "Tungi rejim",
+  'user_info':'User Info',
+  'about_app':'Ilova Haqida',
+  'user_settings':'Foydalanuvchi sozlamasi',
+  'log_out':'Tizimdan chiqish',
+
+
+
   //SIGN IN va LOGIN
   'sign_up': 'Sign Up',
   'name': 'Ism',

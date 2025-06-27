@@ -33,35 +33,27 @@ class SessionReportViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> getReportByTableID(int tableId) async {
-    _setLoading(true);
-    try {
-      _sessionByTableId = await _repository.getReportByTableId(tableId);
-      _error = null;
-    } catch (e) {
-      _error = e.toString();
-    } finally {
-      _setLoading(false);
-    }
-  }
 
-  Future<void> addReport(SessionReportModel model) async {
-    _setLoading(true);
-    try {
-      await _repository.addReport(model: model);
-      await fetchAllReports();
-    } catch (e) {
-      _error = e.toString();
-    } finally {
-      _setLoading(false);
-    }
+Future<int?> addReport(SessionReportModel model) async {
+  _setLoading(true);
+  try {
+    final id = await _repository.addReport(model: model);
+    await fetchAllReports();
+    return id;
+  } catch (e) {
+    _error = e.toString();
+    return null;
+  } finally {
+    _setLoading(false);
   }
+}
 
-  Future<SessionReportModel?> getSessionReportBySessionId(int sessionId) async {
+
+  Future<SessionReportModel?> getSessionReportByUserId() async {
     _setLoading(true);
     try {
-      _sessionbyId =
-          await _repository.getSessionReportBySessionId(sessionId: sessionId);
+      _session_reports =
+          await _repository.getSessionReportByUserId();
       _error = null;
       return _sessionbyId;
     } catch (e) {

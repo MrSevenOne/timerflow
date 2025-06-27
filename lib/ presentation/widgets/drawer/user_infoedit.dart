@@ -88,10 +88,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   decoration:
                       const InputDecoration(labelText: "Foydalanuvchi nomi"),
                   validator: (value) {
-                    if (value == null || value.isEmpty)
+                    if (value == null || value.isEmpty) {
                       return "Ism bo‘sh bo‘lmasligi kerak";
-                    if (value.length < 3)
+                    }
+                    if (value.length < 3) {
                       return "Ism kamida 3 ta harf bo‘lishi kerak";
+                    }
                     return null;
                   },
                 ),
@@ -99,12 +101,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   controller: _emailController,
                   decoration: const InputDecoration(labelText: "Email"),
                   validator: (value) {
-                    if (value == null || value.isEmpty)
+                    if (value == null || value.isEmpty) {
                       return "Email kiritilishi kerak";
+                    }
                     final emailRegex =
                         RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
-                    if (!emailRegex.hasMatch(value))
+                    if (!emailRegex.hasMatch(value)) {
                       return "Email formati noto‘g‘ri";
+                    }
                     return null;
                   },
                 ),
@@ -113,10 +117,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   obscureText: true,
                   decoration: const InputDecoration(labelText: "Yangi parol"),
                   validator: (value) {
-                    if (value == null || value.isEmpty)
+                    if (value == null || value.isEmpty) {
                       return "Parol kiritilishi kerak";
-                    if (value.length < 6)
+                    }
+                    if (value.length < 6) {
                       return "Parol kamida 6 ta belgidan iborat bo‘lishi kerak";
+                    }
                     return null;
                   },
                 ),
@@ -126,10 +132,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   decoration:
                       const InputDecoration(labelText: "Parolni tasdiqlang"),
                   validator: (value) {
-                    if (value == null || value.isEmpty)
+                    if (value == null || value.isEmpty) {
                       return "Parolni qayta kiriting";
-                    if (value != _passwordController.text)
+                    }
+                    if (value != _passwordController.text) {
                       return "Parollar mos emas";
+                    }
                     return null;
                   },
                 ),

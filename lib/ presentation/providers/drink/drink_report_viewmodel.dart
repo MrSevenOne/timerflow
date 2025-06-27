@@ -15,10 +15,10 @@ class DrinkReportViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  Future<void> fetchAll() async {
+  Future<void> fetchByUserId() async {
     _setLoading(true);
     try {
-      _reports = await _repository.getAll();
+      _reports = await _repository.getByUserIdAll();
       _error = null;
     } catch (e) {
       _error = e.toString();
@@ -28,31 +28,6 @@ class DrinkReportViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> addReport(DrinkReportModel model) async {
-    _setLoading(true);
-    try {
-      await _repository.add(model);
-      await fetchAll(); // Refresh list after add
-      _error = null;
-    } catch (e) {
-      _error = e.toString();
-    } finally {
-      _setLoading(false);
-    }
-  }
-
-  Future<void> deleteReport(int id) async {
-    _setLoading(true);
-    try {
-      await _repository.delete(id);
-      await fetchAll(); // Refresh list after delete
-      _error = null;
-    } catch (e) {
-      _error = e.toString();
-    } finally {
-      _setLoading(false);
-    }
-  }
 
   Future<void> insertBulkBySession({
     required int sessionId,
@@ -64,7 +39,7 @@ class DrinkReportViewModel extends ChangeNotifier {
         sessionId: sessionId,
         sessionReportId: sessionReportId,
       );
-      await fetchAll(); // Optional: refresh list if needed
+      await fetchByUserId(); // Optional: refresh list if needed
       _error = null;
     } catch (e) {
       _error = e.toString();

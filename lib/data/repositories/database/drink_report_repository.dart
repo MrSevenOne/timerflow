@@ -5,9 +5,9 @@ class DrinkReportRepository {
   final DrinkReportService service;
   DrinkReportRepository(this.service);
 
-  Future<List<DrinkReportModel>> getAll() => service.getAllDrinkReports();
-  Future<void> add(DrinkReportModel model) => service.addDrinkReport(model);
-  Future<void> delete(int id) => service.deleteDrinkReport(id);
+  Future<List<DrinkReportModel>> getByUserIdAll() => service.getDrinkReportsByUserId();
+  
+
 
   Future<void> bulkInsertBySessionId(
       {required int sessionId, required int sessionReportId}) async {

@@ -5,16 +5,10 @@ class FoodReportRepository {
   final FoodReportService service;
   FoodReportRepository({required this.service});
 
-  Future<List<FoodReportModel>> getAllFoodReport() async =>
-      await service.getAllFoodReports();
-  Future<void> addFoodReport({required FoodReportModel foodReport}) async =>
-      await service.addFoodReport(foodReport);
+  Future<void> bulkInsertBySessionId({required int sessionId,required int sessionReportId}) async =>
+      await service.bulkInsertBySessionId(
+          sessionId: sessionId, sessionReportId: sessionReportId);
 
-  Future<void> deleteFoodReport({required int id}) async =>
-      await service.deleteFoodReport(id);
-  Future<void> bulkInsertBySessionId(int sessionId, sessionReportId) async =>
-      await service.bulkInsertBySessionId(sessionId, sessionReportId);
-
-  Future<List<FoodReportModel>> getFoodReportsBySessionReportId(int sessionReportId) async =>
-      await service.getFoodReportsBySessionReportId(sessionReportId);
+  Future<List<FoodReportModel>> getFoodReportsByUserReportId() async =>
+      await service.getFoodReportsByUserId();
 }
