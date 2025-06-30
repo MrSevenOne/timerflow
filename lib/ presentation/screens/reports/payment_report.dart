@@ -24,7 +24,7 @@ class _PaymentReportState extends State<PaymentReport> {
     final viewModel = context.read<PaymentViewModel>();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      viewModel.fetchPayments();
+      viewModel.fetchPaymentsByUser();
     });
   }
 
@@ -96,7 +96,7 @@ class PaymentReportBody extends StatelessWidget {
             0, (sum, payment) => sum + payment.paymentSum);
 
         if (payments.isEmpty) {
-          return const Center(child: Text('No payments found.'));
+          return  Center(child: Text('payment_report'.tr));
         }
 
         return Column(

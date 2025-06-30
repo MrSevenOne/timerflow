@@ -5,6 +5,8 @@ import 'package:timerflow/domain/models/payment_model.dart';
 class PaymentService {
   final supabase = Supabase.instance.client;
   final tableName = 'payment_report';
+  final userId = Supabase.instance.client.auth.currentUser?.id;
+
 
   // Barcha paymentlarni olish
   Future<List<PaymentReportModel>> getAllPayments() async {
@@ -20,6 +22,28 @@ class PaymentService {
       rethrow;
     }
   }
+
+  // Login bo‘lgan userga tegishli paymentlarni olish
+Future<List<PaymentReportModel>> getPaymentsByUser() async {
+  try {
+    final userId = supabase.auth.currentUser?.id;
+    if (userId == null) throw Exception('User not logged in');
+
+    final response = await supabase
+        .from(tableName)
+        .select('*,tables(*)')
+        .eq('user_id', userId);
+
+    debugPrint('Payments for user $userId fetched: $response');
+    return (response as List<dynamic>)
+        .map((e) => PaymentReportModel.fromJson(e))
+        .toList();
+  } catch (e) {
+    debugPrint('Error fetching payments for user: $e');
+    rethrow;
+  }
+}
+
 
   // ID bo'yicha bitta paymentni olish
   Future<PaymentReportModel?> getPaymentById(int id) async {

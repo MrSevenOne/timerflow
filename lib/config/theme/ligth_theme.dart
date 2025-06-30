@@ -21,7 +21,8 @@ ThemeData lightTheme = ThemeData(
     titleTextStyle: GoogleFonts.pridi(textStyle: TextStyle(color: secondColor,
     fontSize: 24.sp,
      
-    ),)
+    ),
+    ),
   ),
   //CARD THEME
 cardTheme: CardTheme(

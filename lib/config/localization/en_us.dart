@@ -74,6 +74,7 @@ const Map<String, String> enUs = {
   'description': 'Description',
   'payment_time': 'Payment Time:',
   'input_sum': 'Enter amount',
+  'payment_report': 'Payment report Empty',
 
   // Session
   'start_time': 'Start Time:',

@@ -12,6 +12,7 @@ import 'package:timerflow/%20presentation/screens/reports/bar_report.dart';
 import 'package:timerflow/%20presentation/screens/reports/payment_report.dart';
 import 'package:timerflow/%20presentation/screens/reports/table_report.dart';
 import 'package:timerflow/%20presentation/screens/session_page.dart';
+import 'package:timerflow/%20presentation/screens/splash_page.dart';
 import 'package:timerflow/%20presentation/screens/tables_page.dart';
 import 'package:timerflow/%20presentation/widgets/drawer/settings.dart';
 
@@ -31,6 +32,7 @@ class AppRoutes {
   static const String barReport = '/BarReportPage';
   static const String paymentreport = '/Paymentreport';
   static const String settings = '/SettingsPage';
+  static const String splash = '/SplashPage';
 
   static Map<String, WidgetBuilder> routes = {
     home: (context) => HomePage(),
@@ -44,6 +46,7 @@ class AppRoutes {
     barReport: (context) => BarReportPage(),
     paymentreport: (context) => PaymentReport(),
     settings: (context) => SettingsPage(),
+    splash:(context) => SplashPage(),
   };
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {

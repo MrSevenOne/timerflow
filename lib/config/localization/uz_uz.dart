@@ -7,6 +7,7 @@ const Map<String, String> uzUz = {
   'about_app':'Ilova Haqida',
   'user_settings':'Foydalanuvchi sozlamasi',
   'log_out':'Tizimdan chiqish',
+  'payment_report':'To\'lov tarixi bo\'sh',
 
 
 
@@ -111,7 +112,7 @@ const Map<String, String> uzUz = {
   'yes':'Ha',
   'error':'Xatolik',
   'loading':'kutish',
-  'add':'Q\'shish',
+  'add':'Qo\'shish',
   'title':'Nomi',
   'input_title':'Nomni kiriting',
   'size':'Hajmi',

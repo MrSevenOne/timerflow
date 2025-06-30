@@ -11,6 +11,8 @@ class PaymentRepository {
   // ID bo'yicha to'lovni olish
   Future<PaymentReportModel?> getPaymentById({required int id}) =>
       service.getPaymentById(id);
+  Future<List<PaymentReportModel>> getPaymentsByUser() =>
+      service.getPaymentsByUser();
 
   // Yangi to'lov qo'shish
   Future<void> addOrUpdatePayment({required PaymentReportModel paymentModel}) =>

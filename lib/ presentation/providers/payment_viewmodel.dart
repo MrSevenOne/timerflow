@@ -24,31 +24,45 @@ class PaymentViewModel extends ChangeNotifier {
   }
 
   // Get payment
-  Future<void> fetchPayments() async {
-    setLoading(true);
-    try {
-      _payments = await _paymentRepository.getAllPayments();
-      _error = null;
-    } catch (e) {
-      _error = e.toString();
-    } finally {
-      setLoading(false);
-    }
-  }
+  // Future<void> fetchPayments() async {
+  //   setLoading(true);
+  //   try {
+  //     _payments = await _paymentRepository.getAllPayments();
+  //     _error = null;
+  //   } catch (e) {
+  //     _error = e.toString();
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
 
   // Fetch payment by ID
-  Future<void> fetchPaymentById(int id) async {
-    setLoading(true);
-    try {
-      _payment = await _paymentRepository.getPaymentById(id: id);
-      _error = null;
-    } catch (e) {
-      _error = e.toString();
-      _payment = null;
-    } finally {
-      setLoading(false);
-    }
+  // Future<void> fetchPaymentById(int id) async {
+  //   setLoading(true);
+  //   try {
+  //     _payment = await _paymentRepository.getPaymentById(id: id);
+  //     _error = null;
+  //   } catch (e) {
+  //     _error = e.toString();
+  //     _payment = null;
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }
+  // Fetch payments by current user
+Future<void> fetchPaymentsByUser() async {
+  setLoading(true);
+  try {
+    _payments = await _paymentRepository.getPaymentsByUser();
+    _error = null;
+  } catch (e) {
+    _error = e.toString();
+    _payments = [];
+  } finally {
+    setLoading(false);
   }
+}
+
 
   // Add or update payment
   Future<bool> addPayment(PaymentReportModel model) async {

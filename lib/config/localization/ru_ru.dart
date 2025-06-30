@@ -7,6 +7,7 @@ const Map<String, String> ruRu = {
   'user_settings':'Пользовательские настройки',
   'about_app':'O приложении',
   'log_out':'Выйти',
+  'payment_report':'история выкупа пуста',
 
 
 

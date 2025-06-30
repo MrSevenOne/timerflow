@@ -89,12 +89,28 @@ class TableReportBody extends StatelessWidget {
 
         // Filter reports if a date range is selected
         final reports = selectedDateRange != null
-            ? viewModel.sessionReports.where((report) {
-                final reportDate = DateTime.parse(report.startTime.toString());
-                return reportDate.isAfter(selectedDateRange!.start) &&
-                    reportDate.isBefore(selectedDateRange!.end);
-              }).toList()
-            : viewModel.sessionReports;
+    ? viewModel.sessionReports.where((report) {
+        final reportDate = DateTime.parse(report.startTime.toString());
+
+        final start = DateTime(
+          selectedDateRange!.start.year,
+          selectedDateRange!.start.month,
+          selectedDateRange!.start.day,
+          0, 0, 0,
+        );
+
+        final end = DateTime(
+          selectedDateRange!.end.year,
+          selectedDateRange!.end.month,
+          selectedDateRange!.end.day,
+          23, 59, 59,
+        );
+
+        return reportDate.isAfter(start.subtract(const Duration(seconds: 1))) &&
+               reportDate.isBefore(end.add(const Duration(seconds: 1)));
+      }).toList()
+    : viewModel.sessionReports;
+
 
              // ✅ Calculate total sum
         final int totalSumOrder = reports.fold<int>(0, (sum, report) {
