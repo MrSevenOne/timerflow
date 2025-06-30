@@ -5,7 +5,7 @@
 
 ## 📱 Skrinshotlar
 
-|------------|-------------------|----------------|
+
 | ![Login Page](assets/screenshots/login.png) | ![Home Page](assets/screenshots/home.png) | ![Setting Page](assets/screenshots/setting.png) | ![Report Page](assets/screenshots/tolov.png)
 
 ## ✨ Xususiyatlari
