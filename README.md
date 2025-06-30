@@ -1,16 +1,20 @@
-# timerflow
+# ⏱ Timer Flow
 
-A new Flutter project.
+**Timer Flow** — bu foydalanuvchilar uchun soddalashtirilgan va intuitiv interfeysga ega bo'lgan vaqt boshqaruv ilovasi.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## 📱 Skrinshotlar
 
-A few resources to get you started if this is your first Flutter project:
+|------------|-------------------|----------------|
+| ![Login Page](assets/screenshots/login.png) | ![Home Page](assets/screenshots/home.png) | ![Setting Page](assets/screenshots/setting.png) | ![Report Page](assets/screenshots/tolov.png)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## ✨ Xususiyatlari
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+⏱ Stol uchun vaqtni ishga tushirish va to‘xtatish
+
+🟢 Tennis va 🔵 Bilyard stollarini alohida boshqarish
+
+🧮 Har bir stol bo‘yicha vaqt hisoboti va statistikasi
+
+💾 O‘yinlar tarixi va ishlatilgan vaqtni saqlash
+
