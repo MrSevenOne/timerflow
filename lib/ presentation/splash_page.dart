@@ -95,17 +95,14 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return  Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('Yuklanmoqda...', style: TextStyle(fontSize: 16)),
-          ],
-        ),
-      ),
+  child: FractionallySizedBox(
+    widthFactor: 0.5, // Ekran eni 50%
+    child: Image.asset('assets/logo/app_logo.png'),
+  ),
+),
+
     );
   }
 }
