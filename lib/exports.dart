@@ -1,6 +1,5 @@
 // FLUTTER & THIRD-PARTY
 export 'package:flutter/material.dart';
-export 'package:flutter_screenutil/flutter_screenutil.dart';
 export 'package:get/get_navigation/src/root/get_material_app.dart';
 export 'package:provider/provider.dart';
 export 'package:supabase_flutter/supabase_flutter.dart';

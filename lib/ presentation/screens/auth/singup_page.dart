@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:timerflow/%20presentation/providers/auth/user_viewmodel.dart';
@@ -79,7 +78,7 @@ class _SignupPageState extends State<SignupPage> {
                     'sign_up'.tr,
                     style: theme.textTheme.headlineMedium,
                   ),
-                  SizedBox(height: 8.h),
+                  SizedBox(height: 8),
                   TextFormField(
                     controller: _nameController,
                     decoration: InputDecoration(labelText: 'name'.tr),
@@ -101,7 +100,7 @@ class _SignupPageState extends State<SignupPage> {
                         ? 'ac_pass_input'.tr
                         : null,
                   ),
-                  SizedBox(height: 8.h),
+                  SizedBox(height: 8),
                   viewModel.isLoading
                       ? const CircularProgressIndicator()
                       : SizedBox(

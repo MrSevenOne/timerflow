@@ -6,7 +6,6 @@ import 'package:timerflow/%20presentation/screens/reports/bar_report.dart';
 import 'package:timerflow/%20presentation/widgets/table_widget/table_report_info.dart';
 import 'package:timerflow/config/constant/app_constant.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PaymentReport extends StatefulWidget {
   const PaymentReport({super.key});
@@ -121,7 +120,7 @@ class PaymentReportBody extends StatelessWidget {
                             style: GoogleFonts.pridi(
                                 textStyle: Theme.of(context).textTheme.titleLarge),
                           ),
-                          SizedBox(height: 4.h),
+                          SizedBox(height: 4),
                          TableReportInfoRow(title: 'bar_sum'.tr, value: payment.OrderPrice),
                          TableReportInfoRow(title: 'table_sum'.tr, value: payment.TablePrice),
                          TableReportInfoRow(title: 'total_sum'.tr, value: payment.TotalPrice),

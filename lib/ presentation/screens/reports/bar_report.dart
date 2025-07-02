@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timerflow/%20presentation/providers/drink/drink_report_viewmodel.dart';
 import 'package:timerflow/%20presentation/providers/food/food_report_viewmodel.dart';
 import 'package:timerflow/%20presentation/widgets/table_widget/table_report_info.dart';
@@ -148,7 +147,7 @@ class _BarReportPageState extends State<BarReportPage>
                                                     .titleLarge,
                                               ),
                                             ),
-                                            SizedBox(height: 4.h),
+                                            SizedBox(height: 4),
                                             TableReportInfoRow(
                                               title: 'price'.tr,
                                               value: report
@@ -211,7 +210,7 @@ class _BarReportPageState extends State<BarReportPage>
                                                     .titleLarge,
                                               ),
                                             ),
-                                            SizedBox(height: 4.h),
+                                            SizedBox(height: 4),
                                             TableReportInfoRow(
                                               title: 'price'.tr,
                                               value: report

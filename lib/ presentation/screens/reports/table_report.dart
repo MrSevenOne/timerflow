@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -125,7 +124,7 @@ class TableReportBody extends StatelessWidget {
                             style: GoogleFonts.pridi(
                                 textStyle: Theme.of(context).textTheme.titleLarge),
                           ),
-                          SizedBox(height: 4.h),
+                          SizedBox(height: 4),
                           TableReportInfoRow(
                               title: 'start_time'.tr,
                               value: report.formattedStartTime),

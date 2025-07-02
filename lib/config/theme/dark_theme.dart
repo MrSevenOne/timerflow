@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // RANGLAR (asosiy ranglar qorong‘iga moslashtirildi)
@@ -23,7 +22,7 @@ ThemeData darkTheme = ThemeData(
     titleTextStyle: GoogleFonts.pridi(
       textStyle: TextStyle(
         color: secondColor,
-        fontSize: 24.sp,
+        fontSize: 24,
       ),
     ),
     iconTheme: IconThemeData(color: secondColor),
@@ -32,7 +31,7 @@ ThemeData darkTheme = ThemeData(
   cardTheme: CardTheme(
     color: const Color(0xFF1E1E1E),
     elevation: 3.0,
-    margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
     shape: RoundedRectangleBorder(
       side: const BorderSide(width: 0.6, color: Color(0xFF2A2A2A)),
       borderRadius: BorderRadius.circular(8),
@@ -52,7 +51,7 @@ ThemeData darkTheme = ThemeData(
       padding: WidgetStateProperty.all(const EdgeInsets.all(8.0)),
       shape: WidgetStateProperty.all(
         RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.r),
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
     ),
@@ -62,16 +61,16 @@ ThemeData darkTheme = ThemeData(
     backgroundColor: const Color(0xFF1E1E1E),
     elevation: 4.0,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12.r),
+      borderRadius: BorderRadius.circular(12),
     ),
     titleTextStyle: TextStyle(
       color: secondColor,
-      fontSize: 18.sp,
+      fontSize: 18,
       fontWeight: FontWeight.w500,
     ),
     contentTextStyle: TextStyle(
       color: secondColor,
-      fontSize: 14.sp,
+      fontSize: 14,
     ),
   ),
 
@@ -86,8 +85,8 @@ ThemeData darkTheme = ThemeData(
     elevation: 4.0,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
-        topRight: Radius.circular(16.r),
-        bottomRight: Radius.circular(16.r),
+        topRight: Radius.circular(16),
+        bottomRight: Radius.circular(16),
       ),
     ),
   ),
@@ -104,22 +103,22 @@ ThemeData darkTheme = ThemeData(
     filled: true,
     fillColor: const Color(0xFF1A1A1A),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.r),
+      borderRadius: BorderRadius.circular(8),
       borderSide: BorderSide(color: Colors.grey[700]!),
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.r),
+      borderRadius: BorderRadius.circular(8),
       borderSide: BorderSide(color: mainColor, width: 2),
     ),
     errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.r),
+      borderRadius: BorderRadius.circular(8),
       borderSide: const BorderSide(color: Colors.red, width: 1.5),
     ),
     focusedErrorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8.r),
+      borderRadius: BorderRadius.circular(8),
       borderSide: const BorderSide(color: Colors.red, width: 2),
     ),
-    errorStyle: TextStyle(color: Colors.red, fontSize: 12.sp),
+    errorStyle: TextStyle(color: Colors.red, fontSize: 12),
   ),
 
   textTheme: TextTheme(
@@ -149,12 +148,12 @@ ThemeData darkTheme = ThemeData(
       backgroundColor: mainColor,
       foregroundColor: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8.r),
+        borderRadius: BorderRadius.circular(8),
       ),
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
       textStyle: GoogleFonts.pridi(
         textStyle: TextStyle(
-          fontSize: 16.sp,
+          fontSize: 16,
           color: Colors.white,
           fontWeight: FontWeight.w500,
         ),
@@ -168,11 +167,11 @@ ThemeData darkTheme = ThemeData(
     unselectedItemColor: Colors.grey[500],
     selectedLabelStyle: TextStyle(
       fontWeight: FontWeight.w600,
-      fontSize: 12.sp,
+      fontSize: 12,
     ),
     unselectedLabelStyle: TextStyle(
       fontWeight: FontWeight.w400,
-      fontSize: 12.sp,
+      fontSize: 12,
     ),
     showUnselectedLabels: true,
     type: BottomNavigationBarType.fixed,
@@ -193,11 +192,11 @@ ThemeData darkTheme = ThemeData(
     unselectedLabelColor: Colors.grey[500],
     labelStyle: TextStyle(
       fontWeight: FontWeight.w600,
-      fontSize: 14.sp,
+      fontSize: 14,
     ),
     unselectedLabelStyle: TextStyle(
       fontWeight: FontWeight.w400,
-      fontSize: 14.sp,
+      fontSize: 14,
     ),
     indicator: const UnderlineTabIndicator(
       borderSide: BorderSide(
