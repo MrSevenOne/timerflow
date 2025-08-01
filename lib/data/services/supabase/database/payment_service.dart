@@ -1,68 +1,35 @@
-import 'package:flutter/foundation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:timerflow/domain/models/payment_model.dart';
 
-class PaymentService {
-  final supabase = Supabase.instance.client;
-  final tableName = 'payment_report';
+import 'package:timerflow/exports.dart';
 
-  // Barcha paymentlarni olish
-  Future<List<PaymentReportModel>> getAllPayments() async {
-    try {
-      final response = await supabase.from(tableName).select('*,tables(*)');
+class PaymentService extends BaseService {
+  PaymentService() : super('payments');
 
-      debugPrint('Payments fetched: $response');
-      return (response as List<dynamic>)
-          .map((e) => PaymentReportModel.fromJson(e))
-          .toList();
-    } catch (e) {
-      debugPrint('Error fetching payments: $e');
-      rethrow;
-    }
-  }
-
-  // ID bo'yicha bitta paymentni olish
-  Future<PaymentReportModel?> getPaymentById(int id) async {
+  Future<PaymentModel> getPaymentBySession(String sessionId) async {
+    checkUserId();
+    
     try {
       final response = await supabase
           .from(tableName)
           .select()
-          .eq('id', id)
-          .maybeSingle();
-
-      debugPrint('Payment fetched by id: $response');
-      if (response == null) return null;
-      return PaymentReportModel.fromJson(response);
+          .eq('session_id', sessionId)
+          .eq('user_id', currentUserId!)
+          .single();
+      
+      return PaymentModel.fromJson(response);
     } catch (e) {
-      debugPrint('Error fetching payment by id: $e');
-      return null;
+      throw Exception('To\'lov ma\'lumotlari yuklanmadi: $e');
     }
   }
 
-  // Yangi payment qo‘shish yoki mavjudini yangilash (session_id bo‘yicha)
-Future<void> addOrUpdatePayment(PaymentReportModel paymentModel) async {
-  try {
-    await supabase.from(tableName)
-        .upsert(paymentModel.toJson(), onConflict: 'session_report_id');
-
-    debugPrint('Payment added or updated successfully');
-  } catch (e) {
-    debugPrint('Error adding or updating payment: $e');
-    rethrow;
-  }
-}
-
-
-
-  // Paymentni o'chirish
-  Future<void> deletePayment(int id) async {
+  Future<void> addPayment(PaymentModel payment) async {
+    checkUserId();
+    
     try {
-      await supabase.from(tableName).delete().eq('id', id);
-
-      debugPrint('Payment deleted successfully: $id');
+      await supabase
+          .from(tableName)
+          .insert(payment.copyWith(userId: currentUserId).toJson());
     } catch (e) {
-      debugPrint('Error deleting payment: $e');
-      rethrow;
+      throw Exception('To\'lov qo\'shilmadi: $e');
     }
   }
 }

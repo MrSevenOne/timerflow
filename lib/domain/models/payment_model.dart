@@ -1,116 +1,83 @@
-import 'package:get/get_utils/get_utils.dart';
-import 'package:timerflow/domain/models/table_model.dart';
-import 'package:timerflow/utils/formatter/date_formatter.dart';
 import 'package:timerflow/utils/formatter/number_formatted.dart';
 
-class PaymentReportModel {
-  final int? id;
-  final int paymentSum;
-  final int paymentType;
-  final String? description;
-  final int orderSum;
-  final int tableSum;
-  final DateTime createTime;
-  final int totalSum;
-  final int sessionReportId;
+class PaymentModel {
+  final String? id;
+  final DateTime? createdAt;
   final String userId;
-  final int tableId;
-  final TableModel? tableModel;
+  final String tableReportId;
+  final double tableTimeAmount;
+  final double productsAmount;
+  final double totalAmount;
+  final DateTime? paymentTime;
 
-  PaymentReportModel({
+  PaymentModel({
     this.id,
-    required this.paymentSum,
-    required this.paymentType,
-    required this.description,
-    required this.orderSum,
-    required this.tableSum,
-    required this.createTime,
-    required this.totalSum,
-    required this.sessionReportId,
+    this.createdAt,
     required this.userId,
-    required this.tableId,
-    this.tableModel,
+    required this.tableReportId,
+    required this.tableTimeAmount,
+    required this.productsAmount,
+    required this.totalAmount,
+    this.paymentTime,
   });
 
-  String get TablePrice => '${NumberFormatter.price(tableSum)} so\'m';
-  String get OrderPrice => '${NumberFormatter.price(orderSum)} so\'m';
-  String get TotalPrice => '${NumberFormatter.price(totalSum)} so\'m';
-  String get PaymentPrice => '${NumberFormatter.price(paymentSum)} so\'m';
-  String get PaymentTime => DateFormatter.formatWithMonth(date: createTime);
+  String get totalPrice => NumberFormatter.price(totalAmount);
+  String get totaltableTimeAmount => NumberFormatter.price(tableTimeAmount);
+  String get totalproductsAmount => NumberFormatter.price(productsAmount);
 
-  // ignore: non_constant_identifier_names
-  String get PaymentType {
-    switch (paymentType) {
-      case 1:
-        return 'cash'.tr;
-      case 2:
-        return 'click'.tr;
-      default:
-        return 'unknown'.tr;
-    }
-  }
-
-  factory PaymentReportModel.fromJson(Map<String, dynamic> json) {
-    return PaymentReportModel(
-      id: json['id'],
-      paymentSum: json['payment_sum'],
-      paymentType: json['payment_type'],
-      description: json['description'] ?? '',
-      orderSum: json['order_sum'],
-      tableSum: json['table_sum'],
-      createTime: DateTime.parse(
-          json['created_at'] ?? DateTime.now().toIso8601String()),
-      totalSum: json['total_sum'],
-      sessionReportId: json['session_report_id'],
-      userId: json['user_id'],
-      tableId: json['table_id'],
-      tableModel:
-          json['tables'] != null ? TableModel.fromJson(json['tables']) : null,
+  /// ✅ Supabase'dan vaqtni local formatga o'tkazish
+  factory PaymentModel.fromJson(Map<String, dynamic> json) {
+    return PaymentModel(
+      id: json['id'] as String?,
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String).toLocal()
+          : null,
+      userId: json['user_id'] as String,
+      tableReportId: json['table_report_id'] as String,
+      tableTimeAmount: (json['table_time_amount'] as num).toDouble(),
+      productsAmount: (json['products_amount'] as num).toDouble(),
+      totalAmount: (json['total_amount'] as num).toDouble(),
+      paymentTime: json['payment_time'] != null
+          ? DateTime.parse(json['payment_time'] as String).toLocal()
+          : null,
     );
   }
 
+  /// ✅ Supabase'ga UTC formatda vaqt yuborish
   Map<String, dynamic> toJson() {
     return {
-      'payment_sum': paymentSum,
-      'payment_type': paymentType,
-      'description': description,
-      'order_sum': orderSum,
-      'table_sum': tableSum,
-      'create_time': createTime.toIso8601String(),
-      'total_sum': totalSum,
-      'session_report_id': sessionReportId,
+      if (id != null) 'id': id,
       'user_id': userId,
-      'table_id': tableId,
+      'table_report_id': tableReportId,
+      'table_time_amount': tableTimeAmount,
+      'products_amount': productsAmount,
+      'total_amount': totalAmount,
+      if (paymentTime != null)
+        'payment_time': paymentTime!.toUtc().toIso8601String(),
+      if (createdAt != null) 'created_at': createdAt!.toUtc().toIso8601String(),
     };
   }
 
-  PaymentReportModel copyWith({
-    int? id,
-    int? paymentSum,
-    int? paymentType,
-    String? description,
-    int? orderSum,
-    int? tableSum,
-    DateTime? createTime,
-    int? totalSum,
-    int? sessionReportId,
+  /// ✅ copyWith - obyektni klonlash uchun
+  PaymentModel copyWith({
+    String? id,
+    DateTime? createdAt,
     String? userId,
-    int? tableId,
-    TableModel? tableModel,
+    String? tableReportId,
+    double? tableTimeAmount,
+    double? productsAmount,
+    double? totalAmount,
+    DateTime? paymentTime,
   }) {
-    return PaymentReportModel(
+    return PaymentModel(
       id: id ?? this.id,
-      paymentSum: paymentSum ?? this.paymentSum,
-      paymentType: paymentType ?? this.paymentType,
-      description: description ?? this.description,
-      orderSum: orderSum ?? this.orderSum,
-      tableSum: tableSum ?? this.tableSum,
-      createTime: createTime ?? this.createTime,
-      totalSum: totalSum ?? this.totalSum,
-      sessionReportId: sessionReportId ?? this.sessionReportId,
+      createdAt: createdAt ?? this.createdAt,
       userId: userId ?? this.userId,
-      tableId: tableId ?? this.tableId,
-      tableModel: tableModel ?? this.tableModel,
+      tableReportId: tableReportId ?? this.tableReportId,
+      tableTimeAmount: tableTimeAmount ?? this.tableTimeAmount,
+      productsAmount: productsAmount ?? this.productsAmount,
+      totalAmount: totalAmount ?? this.totalAmount,
+      paymentTime: paymentTime ?? this.paymentTime,
     );
   }
 }

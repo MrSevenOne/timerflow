@@ -1,8 +1,8 @@
 import 'package:intl/intl.dart';
 
 class NumberFormatter {
-  static String price(int number) {
-    final formatter = NumberFormat('#,###', 'uz_UZ');
+  static String price(num number) {
+    final formatter = NumberFormat('#,##0.##', 'uz_UZ');
     return formatter.format(number);
   }
 }

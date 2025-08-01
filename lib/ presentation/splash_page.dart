@@ -1,6 +1,6 @@
-import 'dart:async';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:timerflow/exports.dart';
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:timerflow/routers/app_routers.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -10,59 +10,101 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  final supabase = Supabase.instance.client;
+  RealtimeChannel? _subscription;
+
   @override
   void initState() {
     super.initState();
-
-    // Navigator chaqirig'ini build tugagandan keyin amalga oshirish
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initApp();
-    });
+    _initStatusCheck();
   }
 
-  Future<void> _initApp() async {
-    // Delay (optional) for visual splash effect
+  void _initStatusCheck() async {
+    final user = supabase.auth.currentUser;
+
+    // Splash delay (2 soniya)
     await Future.delayed(const Duration(seconds: 2));
 
-    final user = Supabase.instance.client.auth.currentUser;
-
-    if (mounted) {
-      if (user != null) {
-        Navigator.of(context).pushReplacementNamed(AppRoutes.home);
-      } else {
-        Navigator.of(context).pushReplacementNamed(AppRoutes.login);
-      }
+    if (user == null) {
+      if (mounted) Navigator.pushReplacementNamed(context, AppRoutes.login);
+      return;
     }
+
+    final userId = user.id;
+
+    // 1. Boshlang'ich status tekshirish
+    final data = await supabase
+        .from('users')
+        .select('status')
+        .eq('auth_id', userId)
+        .maybeSingle();
+
+    if (!mounted) return;
+
+    final status = data?['status'];
+
+    if (status == 1) {
+      _navigateToHome();
+    } else {
+      _navigateToContactAdmin();
+    }
+
+    // 2. Doimiy kuzatish (Realtime listener)
+    _subscription = supabase
+        .channel('realtime:users')
+        .onPostgresChanges(
+          event: PostgresChangeEvent.update,
+          schema: 'public',
+          table: 'users',
+          filter: PostgresChangeFilter(
+            type: PostgresChangeFilterType.eq,
+            column: 'auth_id',
+            value: userId,
+          ),
+          callback: (payload) {
+            final newStatus = payload.newRecord['status'];
+
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              if (newStatus == 1) {
+                _navigateToHome();
+              } else {
+                _navigateToContactAdmin();
+              }
+            });
+          },
+        )
+        .subscribe();
+  }
+
+  void _navigateToHome() {
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, AppRoutes.home);
+  }
+
+  void _navigateToContactAdmin() {
+    if (!mounted) return;
+    Navigator.pushReplacementNamed(context, AppRoutes.contactAdmin);
+  }
+
+  @override
+  void dispose() {
+    _subscription?.unsubscribe();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Column(
-        children: [
-          const Spacer(), // Logoni markazda joylashtirish uchun
-          Center(
-            child: Image.asset(
-              'assets/logo/app_logo.png',
-              height: 150,
-            ),
-          ),
-          const Spacer(), // Matnni pastga tushirish uchun
-          Padding(
-            padding: EdgeInsets.only(bottom: 30),
-            child: Text(
-              'appName'.tr,
-              style: GoogleFonts.pridi(
-                textStyle: TextStyle(
-                  color: mainColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-          ),
-        ],
+    return const Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Yuklanmoqda...', style: TextStyle(fontSize: 16)),
+          ],
+        ),
       ),
     );
   }

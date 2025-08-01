@@ -1,90 +1,83 @@
-import 'package:flutter/foundation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:timerflow/domain/models/session_report_model.dart';
+import 'package:timerflow/exports.dart';
 
-class SessionReportService {
-  final supabase = Supabase.instance.client;
-  final String tableName = 'session_report';
+class TableReportService extends BaseService {
+  TableReportService() : super('table_reports');
 
-  /// 🔽 Get All Session Reports
-  Future<List<SessionReportModel>> getAllSessionReports() async {
+  /// Barcha hisobotlarni olish (foydalanuvchi bo‘yicha)
+  Future<List<TableReportModel>> getTableReports() async {
+    checkUserId();
+
     try {
-      final response = await supabase.from(tableName).select('*, tables(*)');
+      final response = await supabase
+    .from(tableName)
+    .select('*, table:table_id(*)') 
+    .eq('user_id', currentUserId!)
+    .order('created_at', ascending: false);
+
+
       return (response as List)
-          .map((e) => SessionReportModel.fromJson(e))
+          .map((e) => TableReportModel.fromJson(e))
           .toList();
     } catch (e) {
-      debugPrint('Error fetching session reports: $e');
-      rethrow;
+      debugPrint("getTableReports error: $e");
+      throw Exception("Hisobotlar yuklanmadi: $e");
     }
   }
 
-  /// 🔽 Get Session Reports by Authenticated User
-  Future<List<SessionReportModel>> getSessionReportsByUserId() async {
-    try {
-      final userId = Supabase.instance.client.auth.currentUser?.id;
-      if (userId == null) {
-        throw Exception('User not authenticated');
-      }
+  /// Bitta stol bo‘yicha hisobotlar
+  Future<List<TableReportModel>> getReportsByTableId(String tableId) async {
+    checkUserId();
 
-      final response = await supabase
-          .from(tableName)
-          .select('*, tables(*)')
-          .eq('user_id', userId);
-
-      return (response as List)
-          .map((e) => SessionReportModel.fromJson(e))
-          .toList();
-    } catch (error) {
-      debugPrint('Error fetching session reports by user ID: $error');
-      rethrow;
-    }
-  }
-
-  /// 🔽 Get All Session Reports by Table ID
-  Future<List<SessionReportModel>> getSessionReportsByTableId(int tableId) async {
     try {
       final response = await supabase
           .from(tableName)
-          .select('*, tables(*)')
-          .eq('table_id', tableId);
+          .select()
+          .eq('user_id', currentUserId!)
+          .eq('table_id', tableId)
+          .order('created_at', ascending: false);
 
       return (response as List)
-          .map((e) => SessionReportModel.fromJson(e))
+          .map((e) => TableReportModel.fromJson(e))
           .toList();
-    } catch (error) {
-      debugPrint('Error fetching session reports by table ID: $error');
-      rethrow;
+    } catch (e) {
+      debugPrint("getReportsByTableId error: $e");
+      throw Exception("Stol bo‘yicha hisobotlar yuklanmadi: $e");
     }
   }
 
-  /// ➕ Add or Update Session Report
- Future<int> addReport(SessionReportModel model) async {
-  try {
-    final response = await supabase
-        .from('session_report')
-        .insert(model.toJson())
-        .select()
-        .single(); // bu qo‘shilgan rowni qaytaradi
+  /// Yangi hisobot qo‘shish va ID bilan qaytarish
+  Future<TableReportModel> addReport(TableReportModel report) async {
+    checkUserId();
 
-    final insertedId = response['id'] as int;
-    debugPrint("✅ Session report inserted with ID: $insertedId");
-    return insertedId;
-  } catch (e) {
-    debugPrint("❌ Error inserting session report: $e");
-    rethrow;
-  }
-}
-
-
-  /// 🗑 Delete Session Report
-  Future<void> deleteSessionReport(int id) async {
     try {
-      await supabase.from(tableName).delete().eq('id', id);
-      debugPrint('Session report deleted: $id');
+      final response = await supabase
+          .from(tableName)
+          .insert(report.toJson())
+          .select()
+          .single();
+
+      final model = TableReportModel.fromJson(response);
+      debugPrint("✅ Table Report qo‘shildi: ${model.id}");
+      return model;
     } catch (e) {
-      debugPrint('Error deleting session report: $e');
-      rethrow;
+      debugPrint("❌ Table Report qo‘shilmadi: $e");
+      throw Exception("Hisobot qo‘shilmadi: $e");
+    }
+  }
+
+  /// Hisobotni o‘chirish
+  Future<void> deleteReport(String id) async {
+    checkUserId();
+
+    try {
+      await supabase
+          .from(tableName)
+          .delete()
+          .eq('id', id)
+          .eq('user_id', currentUserId!);
+    } catch (e) {
+      debugPrint("deleteReport error: $e");
+      throw Exception("Hisobot o‘chirilmadi: $e");
     }
   }
 }

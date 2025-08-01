@@ -1,56 +1,80 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:timerflow/config/constant/app_constant.dart';
-import 'package:timerflow/routers/app_routers.dart';
+import 'package:timerflow/exports.dart';
+import 'package:timerflow/utils/responsive_wrap.dart';
 
 class ReportsPage extends StatelessWidget {
   const ReportsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text('reports'.tr),
+      appBar: AppBar(title: const Text("Hisoblar")),
+      body: ResponsiveWrap(
+        spacing: 16,
+        children: [
+          ReportItemWidget(
+            imageUrl: 'payment.png',
+            title: "To'lovlar Tarixi",
+            onTap: () => Navigator.pushNamed(context, AppRoutes.paymentreport),
+          ),
+          ReportItemWidget(
+            imageUrl: 'table_report.png',
+            title: "Stollar Tarixi",
+            onTap: () => Navigator.pushNamed(context, AppRoutes.tableReport),
+          ),
+          ReportItemWidget(
+            imageUrl: 'bar.png',
+            title: "Bar Tarixi",
+            onTap: () => Navigator.pushNamed(context, AppRoutes.barReport),
+          ),
+        ],
       ),
-      body: Padding(
-        padding:  EdgeInsets.all(AppConstant.padding/2),
-        child: Column(
-          children: [
-            Card(
-              child: ListTile(
-                title: Text(
-                  'table_title'.tr,
-                  style: GoogleFonts.pridi(textStyle: theme.textTheme.titleLarge,),
+    );
+  }
+}
+
+
+class ReportItemWidget extends StatelessWidget {
+  final String imageUrl;
+  final String title;
+  final VoidCallback onTap;
+
+  const ReportItemWidget({
+    super.key,
+    required this.imageUrl,
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: mainColor,
+      borderRadius: BorderRadius.circular(12.0),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12.0),
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Row(
+            children: [
+              Image.asset("assets/icons/$imageUrl", height: 32.0),
+              const SizedBox(width: 24.0),
+              Flexible(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-                trailing: Icon(Icons.navigate_next),
-                onTap: () => Navigator.pushNamed(context, AppRoutes.tableReport),
               ),
-            ),
-            Card(
-              child: ListTile(
-                title: Text(
-                  'bar_title'.tr,
-                  style: GoogleFonts.pridi(textStyle: theme.textTheme.titleLarge,),
-                ),
-                trailing: Icon(Icons.navigate_next),
-                onTap: () => Navigator.pushNamed(context, AppRoutes.barReport),
-              ),
-            ),
-            Card(
-              child: ListTile(
-                title: Text(
-                  'payment_title'.tr,
-                  style: GoogleFonts.pridi(textStyle: theme.textTheme.titleLarge,),
-                ),
-                trailing: Icon(Icons.navigate_next),
-                onTap: () => Navigator.pushNamed(context, AppRoutes.paymentreport),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
+

@@ -1,4 +1,5 @@
-import 'package:get/get_utils/get_utils.dart';
+import 'package:timerflow/%20presentation/providers/auth/user_viewmodel.dart';
+import 'package:timerflow/%20presentation/widgets/drawer/userinfo_edit.dart';
 import 'package:timerflow/exports.dart';
 
 class AppDrawer extends StatefulWidget {
@@ -30,7 +31,7 @@ class _AppDrawerState extends State<AppDrawer> {
           }
 
           final UserModel? user = userViewmodel.userModel;
-          final String userName = user?.username ?? 'Guest User';
+          final String userName = user?.name ?? 'Guest User';
           final String userEmail = user?.email ?? 'No email';
 
           return ListView(
@@ -47,14 +48,14 @@ class _AppDrawerState extends State<AppDrawer> {
                   color: theme.primaryColor,
                 ),
               ),
-              ListTile(
-                leading: const Icon(Icons.settings),
-                title:  Text("settings".tr),
-                onTap: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.settings,
-                ),
-              ),
+              // ListTile(
+              //   leading: const Icon(Icons.settings),
+              //   title:  Text("settings".tr),
+              //   onTap: () => Navigator.pushNamed(
+              //     context,
+              //     AppRoutes.settings,
+              //   ),
+              // ),
               ListTile(
                 leading: const Icon(Icons.person),
                 title:  Text("user_info".tr),
@@ -68,24 +69,24 @@ class _AppDrawerState extends State<AppDrawer> {
                   );
                 },
               ),
-              ListTile(
-                leading: const Icon(Icons.info),
-                title:  Text("about_app".tr),
-                onTap: () {
-                  Navigator.pop(context); // Drawer yopilsin
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => EditProfilePage(userModel: user!),
-                    ),
-                  );
-                },
-              ),
+              // ListTile(
+              //   leading: const Icon(Icons.info),
+              //   title:  Text("about_app".tr),
+              //   onTap: () {
+              //     Navigator.pop(context); // Drawer yopilsin
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (_) => EditProfilePage(userModel: user!),
+              //       ),
+              //     );
+              //   },
+              // ),
               ListTile(
                 leading: const Icon(Icons.logout),
                 title:  Text("log_out".tr),
                 onTap: () {
-                  context.read<AuthViewModel>().signOut(context);
+                  context.read<AuthProvider>().signOut(context);
                 },
               ),
             ],

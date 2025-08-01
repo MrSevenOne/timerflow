@@ -1,35 +1,69 @@
-import 'package:flutter/material.dart';
-import 'package:get/get_utils/get_utils.dart';
-import 'package:timerflow/%20presentation/screens/drink_page.dart';
-import 'package:timerflow/%20presentation/screens/foods_page.dart';
-import 'package:timerflow/%20presentation/widgets/drawer/drawer.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+import 'package:timerflow/exports.dart';
+import 'package:timerflow/utils/responsive_wrap.dart';
 
-class BarPage extends StatelessWidget {
+class BarPage extends StatefulWidget {
   const BarPage({super.key});
 
   @override
+  State<BarPage> createState() => _BarPageState();
+}
+
+class _BarPageState extends State<BarPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<ProductViewModel>().fetchProducts();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2, // Tab soni
-      child: Scaffold(
-        drawer: AppDrawer(),
-        appBar: AppBar(
-        
-          title: Text("bar_title".tr),
-          bottom:  TabBar(
-            tabs: [
-              Tab(text: 'drink'.tr),
-              Tab(text: 'food'.tr),
-            ],
-          ),
-        ),
-        body: const TabBarView(
-          children: [
-            DrinkPage(), // Ichimliklar ro'yxati
-            FoodPage(), // Ovqatlar ro'yxati
-          ],
-        ),
+   final breakpoints = ResponsiveBreakpoints.of(context);
+        final isDesktop = breakpoints.isDesktop;
+        final isTablet = breakpoints.isTablet;    
+        return Scaffold(
+      appBar: AppBar(
+        title: Text('Bar'),
+      ),
+      body: Consumer<ProductViewModel>(
+        builder: (context, viewModel, child) {
+          if (viewModel.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (viewModel.error != null) {
+            return Center(child: Text("Xatolik: ${viewModel.error}"));
+          }
+          if (viewModel.products.isEmpty) {
+            return Center(
+              child: Image.asset('assets/icons/empty-box.png',height: isDesktop ? 400 : isTablet ? 300 :200),
+            );
+          }
+
+          return ResponsiveWrap(
+            children: viewModel.products.map((products) {
+              return SizedBox(
+                  child: ProductItem(product: products, onTap: () {}));
+            }).toList(),
+          );
+        },
+      ),
+      floatingActionButton: floatingActionButton(
+        ontap: () => BarAddDialog.show(context),
       ),
     );
   }
 }
+// ListView.builder(
+//             itemCount: viewModel.products.length,
+//             itemBuilder: (context, index) {
+//               final product = viewModel.products[index];
+//               debugPrint(viewModel.products.length.toString());
+//               return ProductItem(
+//                 product: product,
+//                 onTap: () {},
+//               );
+//             },
+//           );

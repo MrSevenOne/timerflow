@@ -1,73 +1,91 @@
 class UserModel {
-  final int? id;
-  final DateTime? createTime;
+  final String? id;
   final String? authId;
-  final String username;
+  final DateTime? createdAt;
+  final String name;
   final String email;
   final String password;
-  final int? subscriptionId;
-  final String status;
+  final String? tariffId;
+  final DateTime? tariffStartDate;
+  final DateTime? tariffEndDate;
+  final DateTime? updatedAt;
 
   UserModel({
     this.id,
-    this.createTime,
+    this.createdAt,
     this.authId,
-    required this.username,
+    required this.name,
     required this.email,
     required this.password,
-    this.subscriptionId,
-    required this.status,
+    this.tariffId,
+    this.tariffStartDate,
+    this.tariffEndDate,
+    this.updatedAt,
   });
 
-  // 🔁 FROM JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'] as int?,
-      createTime: json['created_at'] != null
-          ? DateTime.parse(json['created_at'])
+      id: json['id'] as String?,
+      authId: json['auth_id'],
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
           : null,
-      authId: json['auth_id'] as String?,
-      username: json['username'] ?? '',
-      email: json['email'] ?? '',
-      password: json['password'] ?? '',
-      subscriptionId: json['subscription_id'] as int?,
-      status: json['status'] ?? '',
+      name: json['name'] as String,
+      email: json['email'] as String,
+      password: json['password'] as String,
+      tariffId: json['tariff_id'] as String?,
+      tariffStartDate: json['tariff_start_date'] != null
+          ? DateTime.parse(json['tariff_start_date'] as String)
+          : null,
+      tariffEndDate: json['tariff_end_date'] != null
+          ? DateTime.parse(json['tariff_end_date'] as String)
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'] as String)
+          : null,
+
     );
   }
 
-  // 🔁 TO JSON
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,
-      if (authId != null) 'auth_id': authId,
-      'username': username,
+      'name': name,
       'email': email,
       'password': password,
-      if (subscriptionId != null) 'subscription_id': subscriptionId,
-      'status': status,
+      if (tariffId != null) 'tariff_id': tariffId,
+      if (tariffStartDate != null)
+        'tariff_start_date': tariffStartDate!.toIso8601String(),
+      if (tariffEndDate != null)
+        'tariff_end_date': tariffEndDate!.toIso8601String(),
+      if (createdAt != null) 'created_at': createdAt!.toIso8601String(),
+      if (updatedAt != null) 'updated_at': updatedAt!.toIso8601String(),
     };
   }
 
-  // 📄 COPYWITH
   UserModel copyWith({
-    int? id,
-    DateTime? createTime,
+    String? id,
     String? authId,
-    String? username,
+    DateTime? createdAt,
+    String? name,
     String? email,
     String? password,
-    int? subscriptionId,
-    String? status,
+    String? tariffId,
+    DateTime? tariffStartDate,
+    DateTime? tariffEndDate,
+    DateTime? updatedAt,
   }) {
     return UserModel(
       id: id ?? this.id,
-      createTime: createTime ?? this.createTime,
       authId: authId ?? this.authId,
-      username: username ?? this.username,
+      createdAt: createdAt ?? this.createdAt,
+      name: name ?? this.name,
       email: email ?? this.email,
       password: password ?? this.password,
-      subscriptionId: subscriptionId ?? this.subscriptionId,
-      status: status ?? this.status,
+      tariffId: tariffId ?? this.tariffId,
+      tariffStartDate: tariffStartDate ?? this.tariffStartDate,
+      tariffEndDate: tariffEndDate ?? this.tariffEndDate,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }

@@ -1,124 +1,73 @@
-// Drinks Model
-import 'package:timerflow/domain/models/drink_model.dart';
-import 'package:timerflow/domain/models/food_model.dart';
+import 'package:timerflow/domain/models/products_model.dart';
 
-class OrderDrinkModel {
-  final int? id;
-  final DateTime? createdAt;
-  final int sessionId;
-  final int drinkId;
+class OrderModel {
+  final String id;
+  final String userId;
+  final String productId;
+  final String tableId;
   final int quantity;
-  final DrinkModel? drinkModel; // Added DrinkModel as a field
+  final DateTime orderTime;
+  final DateTime createdAt;
+  final ProductModel? product;
 
-  OrderDrinkModel({
-    this.id,
-    this.createdAt,
-    required this.sessionId,
-    required this.drinkId,
+  OrderModel({
+    this.id = '',
+    required this.userId,
+    required this.productId,
+    required this.tableId,
     required this.quantity,
-    this.drinkModel,
+    required this.orderTime,
+    required this.createdAt,
+    this.product,
   });
 
-  // Convert from JSON
-  factory OrderDrinkModel.fromJson(Map<String, dynamic> json) {
-    return OrderDrinkModel(
-      id: json['id'] as int,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      sessionId: json['session_id'],
-      drinkId: json['drink_id'],
+  factory OrderModel.fromJson(Map<String, dynamic> json) {
+    return OrderModel(
+      id: json['id'] ?? '',
+      userId: json['user_id'],
+      productId: json['product_id'],
+      tableId: json['table_id'],
       quantity: json['quantity'],
-      // Now properly initializing DrinkModel from JSON
-      drinkModel:
-          json['drink'] != null ? DrinkModel.fromJson(json['drink']) : null,
+      orderTime: DateTime.parse(json['order_time']).toLocal(),
+      createdAt: DateTime.parse(json['created_at']).toLocal(),
+
+      /// 👇 JOIN qilingan products jadvalidan parse qilish
+      product: json['products'] != null
+          ? ProductModel.fromJson(json['products'])
+          : null,
     );
   }
 
-  get price => null;
-
-  // Convert to JSON
   Map<String, dynamic> toJson() {
     return {
-      'session_id': sessionId,
-      'drink_id': drinkId,
+      'user_id': userId,
+      'product_id': productId,
+      'table_id': tableId,
       'quantity': quantity,
+      'order_time': orderTime.toUtc().toIso8601String(),
+      'created_at': createdAt.toUtc().toIso8601String(),
     };
   }
 
-  // Copy the object with optional new values
-  OrderDrinkModel copyWith({
-    int? id,
-    DateTime? createdAt,
-    int? sessionId,
-    int? drinkId,
+  OrderModel copyWith({
+    String? id,
+    String? userId,
+    String? productId,
+    String? tableId,
     int? quantity,
-    int? totalPrice,
-    DrinkModel? drinkModel,
-  }) {
-    return OrderDrinkModel(
-      id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      sessionId: sessionId ?? this.sessionId,
-      drinkId: drinkId ?? this.drinkId,
-      quantity: quantity ?? this.quantity,
-      drinkModel: drinkModel ?? this.drinkModel,
-    );
-  }
-}
-
-// Order Food Model
-class OrderFoodModel {
-  final int? id;
-  final DateTime? createdAt;
-  final int sessionId;
-  final int foodId;
-  final int quantity;
-  final FoodModel? foodModel;
-
-  OrderFoodModel({
-    this.id,
-    this.createdAt,
-    required this.sessionId,
-    required this.foodId,
-    required this.quantity,
-    this.foodModel,
-  });
-
-  // Convert from JSON
-  factory OrderFoodModel.fromJson(Map<String, dynamic> json) {
-    return OrderFoodModel(
-      id: json['id'] as int,
-      createdAt: DateTime.parse(json['created_at'] as String),
-      sessionId: json['session_id'],
-      foodId: json['food_id'],
-      quantity: json['quantity'],
-      foodModel: json['food'] != null ? FoodModel.fromJson(json['food']) : null,
-    );
-  }
-
-  // Convert to JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'session_id': sessionId,
-      'food_id': foodId,
-      'quantity': quantity,
-    };
-  }
-
-  // Copy the object with optional new values
-  OrderFoodModel copyWith({
-    int? id,
+    DateTime? orderTime,
     DateTime? createdAt,
-    int? sessionId,
-    int? foodId,
-    int? quantity,
-    int? totalPrice,
+    ProductModel? product,
   }) {
-    return OrderFoodModel(
+    return OrderModel(
       id: id ?? this.id,
-      createdAt: createdAt ?? this.createdAt,
-      sessionId: sessionId ?? this.sessionId,
-      foodId: foodId ?? this.foodId,
+      userId: userId ?? this.userId,
+      productId: productId ?? this.productId,
+      tableId: tableId ?? this.tableId,
       quantity: quantity ?? this.quantity,
+      orderTime: orderTime ?? this.orderTime,
+      createdAt: createdAt ?? this.createdAt,
+      product: product ?? this.product,
     );
   }
 }
