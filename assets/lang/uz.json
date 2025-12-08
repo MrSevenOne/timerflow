@@ -1,0 +1,12 @@
+{
+  "login": "Kirish",
+  "register": "Ro'yxatdan o'tish",
+  "email": "Email",
+  "password": "Parol",
+  "confirm_password": "Parolni tasdiqlash",
+  "name": "Ism",
+  "all_fields_required": "Barcha maydonlar to‘ldirilishi shart",
+  "password_min": "Parol kamida 6 ta belgidan iborat bo‘lishi kerak",
+  "password_mismatch": "Parollar mos kelmadi",
+  "registration_success": "Ro'yxatdan o'tish muvaffaqiyatli"
+}

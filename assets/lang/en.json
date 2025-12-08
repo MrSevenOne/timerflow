@@ -1,0 +1,16 @@
+{
+  "login": "Login",
+  "register": "Register",
+  "no_account": "Don't have an account?",
+  "have_account": "Already have an account?",
+  "welcome": "WELCOME",
+  "email": "Email",
+  "password": "Password",
+  "confirm_password": "Confirm Password",
+  "name": "Name",
+  "all_fields_required": "All fields are required",
+  "password_min": "Password must be at least 6 characters",
+  "password_mismatch": "Passwords do not match",
+  "registration_success": "Registration successful"
+}
+
