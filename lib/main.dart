@@ -3,36 +3,46 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'package:timerflow/core/connectivity_manager.dart';
+import 'package:timerflow/models/table_model.dart';
 import 'package:timerflow/providers/auth/auth_viewmodel.dart';
 import 'package:timerflow/providers/bottom_nav_provider.dart';
 import 'package:timerflow/providers/service/table_viewmodel.dart';
 import 'package:timerflow/providers/service/tariff_viewmodel.dart';
 import 'package:timerflow/providers/service/user_tariff_viewmodel.dart';
 import 'package:timerflow/providers/theme_viewmodel.dart';
+import 'package:timerflow/repositories/tables/table_repository.dart';
 import 'package:timerflow/repositories/tables/usertariff_repository.dart';
 import 'package:timerflow/routing/app_router.dart';
+import 'package:timerflow/services/remote/tables/table_supabase_service.dart';
 import 'package:timerflow/services/remote/tables/usertariff_service.dart';
 import 'package:timerflow/utils/theme/light_theme.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // 1️⃣ Hive init
   await Hive.initFlutter();
 
-  WidgetsFlutterBinding.ensureInitialized();
-  // 2. Tinglovchini ishga tushirish
-  ConnectivityManager().startListening();
+  // 2️⃣ Adapter register
+  if (!Hive.isAdapterRegistered(0)) {
+    Hive.registerAdapter(TableModelAdapter());
+  }
 
-  // Easy Localization init
-  await EasyLocalization.ensureInitialized();
+  // 3️⃣ Hive box’larini ochish
+  final tablesBox = await Hive.openBox<TableModel>('tables');
+  final settingsBox = await Hive.openBox<String>('settings');
 
-  // Supabase init
+  // 4️⃣ Supabase init
   await Supabase.initialize(
     url: 'https://gfguahgevksybisiwrlt.supabase.co',
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmZ3VhaGdldmtzeWJpc2l3cmx0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM4MjExNTIsImV4cCI6MjA3OTM5NzE1Mn0.fAHBMvtLesfQHC9vwENSkCmhlk6xwi1AbyKQlu4Mvws',
   );
+
+  // 6️⃣ EasyLocalization init
+  await EasyLocalization.ensureInitialized();
 
   runApp(
     EasyLocalization(
@@ -43,22 +53,43 @@ void main() async {
       ],
       path: 'assets/lang',
       fallbackLocale: const Locale('en'),
-      child: const MyApp(),
+      child: MyApp(
+        tablesBox: tablesBox,
+        settingsBox: settingsBox,
+      ),
     ),
   );
 }
 
+// --- MyApp with dependency injection for Hive boxes ---
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Box<TableModel> tablesBox;
+  final Box<String> settingsBox;
+
+  const MyApp({
+    super.key,
+    required this.tablesBox,
+    required this.settingsBox,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final supabaseService = TableSupabaseService();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthViewModel()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => TariffViewModel()),
-        ChangeNotifierProvider(create: (_) => TableViewModel()),
+        ChangeNotifierProvider(
+          create: (_) => TableViewModel(
+            repository: TableRepository(
+              tablesBox: tablesBox,
+              settingsBox: settingsBox,
+              supabaseService: supabaseService,
+            ),
+          ),
+        ),
         ChangeNotifierProvider(create: (_) => BottomNavProvider()),
         ChangeNotifierProvider(
           create: (_) => UserTariffViewModel(
@@ -73,8 +104,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'TimerFlow',
             debugShowCheckedModeBanner: false,
-            initialRoute:
-                AppRouter.splash, // ✅ initialRoute ni string qilib yozing**
+            initialRoute: AppRouter.splash,
             onGenerateRoute: AppRouter.generateRoute,
             navigatorKey: navigatorKey,
             theme: lightTheme,

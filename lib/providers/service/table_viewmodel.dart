@@ -1,74 +1,91 @@
-import 'package:flutter/material.dart';
 import 'package:timerflow/models/table_model.dart';
 import 'package:timerflow/providers/base_viewmodel.dart';
-import 'package:timerflow/repositories/tables/usertariff_repository.dart';
-import 'package:timerflow/services/remote/tables/table_supabase_service.dart';
-import 'package:timerflow/services/remote/tables/usertariff_service.dart';
-import 'package:timerflow/services/remote/user_manager.dart';
+import 'package:timerflow/repositories/tables/table_repository.dart';
 
 class TableViewModel extends BaseViewModel {
-  final TableService _tableService = TableService();
-  final UserTariffService _tariffService =
-      UserTariffService(repository: UserTariffRepository());
+  final TableRepository _repository;
 
+  /// Lokal va serverdan olingan table lar
   List<TableModel> tables = [];
-  int userTableLimit = 0;
 
-  final UserManager _userManager = UserManager();
+  TableViewModel({required TableRepository repository})
+      : _repository = repository;
 
-  /// Init: tarif va table larni yuklash
+  /// Init: lokal ma'lumotlarni yuklash va sinxronizatsiya qilish
   Future<void> init() async {
     await runFuture(() async {
-      await loadUserTariff();
-      await loadTables();
+      // 1️⃣ Lokal bazadan table larni o‘qish
+      tables = _repository.getLocalTables();
+
+      // 2️⃣ Sinxronizatsiya (internet bor bo‘lsa) — upload + download
+      await _repository.trySync();
+
+      // 3️⃣ Sinxronizatsiyadan so‘ng lokal bazani yangilash
+      tables = _repository.getLocalTables();
     });
   }
 
-  /// User obuna bo‘lgan tarif bo‘yicha table limit
-  Future<void> loadUserTariff() async {
-    userTableLimit = await _tariffService.getUserTableLimitCount();
-    debugPrint("Userga ruxsat berilgan stol limiti: $userTableLimit");
-  }
-
-  /// Barcha table larni yuklash
-  Future<void> loadTables() async {
-    tables = await _tableService.getTables();
-    debugPrint("Jami mavjud stol: ${tables.length}");
-  }
-
-  /// Stol qo‘shish (limit tekshiriladi)
-  Future<void> addTable(TableModel table) async {
+  /// Stol qo‘shish (lokal + sinxronizatsiya)
+  Future<void> addTable({
+    required String name,
+    required String type,
+    required int hourPrice,
+    required String userId,
+  }) async {
     await runFuture(() async {
-      // LIMIT tekshirish
-      if (tables.length >= userTableLimit) {
-        setError("Sizning tarifingiz bo‘yicha faqat $userTableLimit ta stol yaratishingiz mumkin.");
-        return;
-      }
+      final newTable = await _repository.createNewTable(
+        name: name,
+        type: type,
+        price: hourPrice,
+        userId: userId,
+      );
 
-      // userId ni auth user bilan belgilash
-      final tableWithUser = table.copyWith(userId: _userManager.requireUserId());
+      // UI uchun qo‘shish
+      tables.add(newTable);
+      setSuccess("Stol muvaffaqiyatli qo‘shildi");
+    });
+  }
 
-      final newTable = await _tableService.addTable(tableWithUser);
+  /// Stolni tahrirlash (lokal + serverga push)
+  Future<void> updateTable(
+    String localId, {
+    String? name,
+    String? type,
+    int? hourPrice,
+    bool? isActive,
+  }) async {
+    await runFuture(() async {
+      await _repository.updateExistingTable(
+        localId,
+        name: name,
+        type: type,
+        hourPrice: hourPrice,
+        isActive: isActive,
+      );
 
-      if (newTable != null) {
-        tables.add(newTable);
-        setSuccess("Stol muvaffaqiyatli qo‘shildi");
-      } else {
-        setError("Stol qo‘shishda xatolik");
-      }
+      // UI yangilash
+      tables = _repository.getLocalTables();
+      setSuccess("Stol muvaffaqiyatli yangilandi");
     });
   }
 
   /// Stolni o‘chirish
-  Future<void> deleteTable(int serverId) async {
+  Future<void> deleteTable(String localId) async {
     await runFuture(() async {
-      final success = await _tableService.deleteTable(serverId);
-      if (success) {
-        tables.removeWhere((t) => t.serverId == serverId);
-        setSuccess("Stol muvaffaqiyatli o‘chirildi");
-      } else {
-        setError("Stolni o‘chirishda xatolik");
-      }
+      await _repository.deleteTableLocally(localId);
+
+      // UI yangilash
+      tables = _repository.getLocalTables();
+      setSuccess("Stol muvaffaqiyatli o‘chirildi");
+    });
+  }
+
+  /// Qo‘lda sinxronizatsiya
+  Future<void> syncTables() async {
+    await runFuture(() async {
+      await _repository.trySync();
+      tables = _repository.getLocalTables();
+      setSuccess("Sinxronizatsiya yakunlandi");
     });
   }
 }
