@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/providers/theme_viewmodel.dart';
+import 'package:timerflow/presentation/viewmodel/theme_viewmodel.dart';
 
 extension ThemeExtension on BuildContext {
   // current ThemeData

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:timerflow/providers/auth/auth_viewmodel.dart';
+import 'package:timerflow/presentation/viewmodel/service/auth/auth_viewmodel.dart';
 import 'package:timerflow/routing/app_router.dart';
 
 class LoginForm extends StatefulWidget {

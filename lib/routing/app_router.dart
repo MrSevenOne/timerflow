@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:timerflow/views/connect_admin/connect_admin_screen.dart';
 import 'package:timerflow/views/screens/auth/auth_screen.dart';
 import 'package:timerflow/views/screens/home/home_screen.dart';
-import 'package:timerflow/views/screens/tables/table_screen.dart';
 import 'package:timerflow/views/screens/tariff/tariff_screen.dart';
 import 'package:timerflow/views/splash/splash_screen.dart';
 import 'package:timerflow/views/widgets/navigator/root_navigation.dart';
@@ -32,8 +31,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case tariff:
         return MaterialPageRoute(builder: (_) => const TariffScreen());
-      case table:
-        return MaterialPageRoute(builder: (_) => TableScreen());
+      // case table:
+      //   return MaterialPageRoute(builder: (_) => TableScreen());
       case connectAdmin:
         return MaterialPageRoute(builder: (_) => const ConnectAdminPage());
       default:

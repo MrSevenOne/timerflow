@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:timerflow/providers/splash_viewmodel.dart';
+import 'package:timerflow/presentation/viewmodel/splash_viewmodel.dart';
 import 'package:timerflow/routing/app_router.dart';
 
 class SplashScreen extends StatefulWidget {

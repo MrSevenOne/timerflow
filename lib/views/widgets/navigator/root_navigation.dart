@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timerflow/providers/bottom_nav_provider.dart';
+import 'package:timerflow/presentation/screens/table_screen.dart';
+import 'package:timerflow/presentation/viewmodel/bottom_nav_provider.dart';
 import 'package:timerflow/utils/extension/theme_extension.dart';
 import 'package:timerflow/views/responsive.dart';
 import 'package:timerflow/views/screens/auth/auth_screen.dart';
-import 'package:timerflow/views/screens/tables/table_screen.dart';
 
 class RootNavigation extends StatelessWidget {
   const RootNavigation({super.key});
 
   // Sahifalar ro'yxati
   static final List<Widget> _pages = [
-    const TableScreen(),
-    const TableScreen(),
+    const TablesScreen(),
+    const TablesScreen(),
     const AuthScreen(),
   ];
 

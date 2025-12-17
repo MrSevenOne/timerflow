@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import 'package:timerflow/core/connectivity_manager.dart';
-import 'package:timerflow/models/table_model.dart';
-import 'package:timerflow/providers/auth/auth_viewmodel.dart';
-import 'package:timerflow/providers/bottom_nav_provider.dart';
-import 'package:timerflow/providers/service/table_viewmodel.dart';
-import 'package:timerflow/providers/service/tariff_viewmodel.dart';
-import 'package:timerflow/providers/service/user_tariff_viewmodel.dart';
-import 'package:timerflow/providers/theme_viewmodel.dart';
-import 'package:timerflow/repositories/tables/table_repository.dart';
-import 'package:timerflow/repositories/tables/usertariff_repository.dart';
+import 'package:timerflow/data/local/database/tables/table_service.dart';
+import 'package:timerflow/data/remote/network_service.dart';
+import 'package:timerflow/data/remote/supabase/tables/table_service.dart';
+import 'package:timerflow/data/remote/supabase/tables/usertariff_service.dart';
+import 'package:timerflow/data/repository/tables/table_repository.dart';
+import 'package:timerflow/data/repository/tables/usertariff_repository.dart';
+import 'package:timerflow/models/table/table_model.dart';
+import 'package:timerflow/presentation/viewmodel/bottom_nav_provider.dart';
+import 'package:timerflow/presentation/viewmodel/service/auth/auth_viewmodel.dart';
+import 'package:timerflow/presentation/viewmodel/service/table/tables_viewmodel.dart';
+import 'package:timerflow/presentation/viewmodel/service/table/tariff_viewmodel.dart';
+import 'package:timerflow/presentation/viewmodel/service/table/user_tariff_viewmodel.dart';
+import 'package:timerflow/presentation/viewmodel/theme_viewmodel.dart';
 import 'package:timerflow/routing/app_router.dart';
-import 'package:timerflow/services/remote/tables/table_supabase_service.dart';
-import 'package:timerflow/services/remote/tables/usertariff_service.dart';
 import 'package:timerflow/utils/theme/light_theme.dart';
 
 Future<void> main() async {
@@ -74,7 +74,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final supabaseService = TableSupabaseService();
 
     return MultiProvider(
       providers: [
@@ -83,10 +82,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TariffViewModel()),
         ChangeNotifierProvider(
           create: (_) => TableViewModel(
-            repository: TableRepository(
-              tablesBox: tablesBox,
-              settingsBox: settingsBox,
-              supabaseService: supabaseService,
+            TableRepository(
+              networkService: NetworkService(),
+              apiService: TableSupabaseService(),
+              hiveService: TableHiveService(),
             ),
           ),
         ),
@@ -106,7 +105,6 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             initialRoute: AppRouter.splash,
             onGenerateRoute: AppRouter.generateRoute,
-            navigatorKey: navigatorKey,
             theme: lightTheme,
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
